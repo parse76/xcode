@@ -5,7 +5,7 @@
 */
 class Home extends CI_Controller
 {
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 
@@ -15,7 +15,9 @@ class Home extends CI_Controller
 			'secret' => 'd3368aba56f8af88697b24b3fea344c0',
 			'cookie' => true
 		);
-		$this->load->library('facebook', $config, 'facebook');
+
+		// loads the facebook library
+		$this->load->library('facebook', $config);
 	}
 
 	public function index()
@@ -25,10 +27,8 @@ class Home extends CI_Controller
 
 	public function facebook_login()
 	{
-		$facebook = $this->facebook;
-
 		//Get the FB UID of the currently logged in user
-		$user = $facebook->getUser();
+		$user = $this->facebook->getUser();
 
 		//if the user has already allowed the application, you'll be able to get his/her FB UID
 		if($user) {
@@ -42,9 +42,9 @@ class Home extends CI_Controller
 			//do stuff when already logged in
 			
 			//get the user's access token
-			$access_token = $facebook->getAccessToken();
+			$access_token = $this->facebook->getAccessToken();
 			//check permissions list
-			$permissions_list = $facebook->api(
+			$permissions_list = $this->facebook->api(
 				'/me/permissions',
 				'GET',
 				array(
@@ -63,7 +63,7 @@ class Home extends CI_Controller
 						'display'   =>  "page",
 						'next' => 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']
 					);
-					$login_url = $facebook->getLoginUrl($login_url_params);
+					$login_url = $this->facebook->getLoginUrl($login_url_params);
 					header("Location: {$login_url}");
 					exit();
 				}
@@ -71,7 +71,7 @@ class Home extends CI_Controller
 			
 			//if the user has allowed all the permissions we need,
 			//get the information about the pages that he or she managers
-			$accounts = $facebook->api(
+			$accounts = $this->facebook->api(
 				'/me/accounts',
 				'GET',
 				array(
@@ -97,7 +97,7 @@ class Home extends CI_Controller
 				'display'   =>  "page",
 				'next' => 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']
 			);
-			$login_url = $facebook->getLoginUrl($login_url_params);
+			$login_url = $this->facebook->getLoginUrl($login_url_params);
 			
 			//redirect to the login URL on facebook
 			header("Location: {$login_url}");
@@ -115,5 +115,40 @@ class Home extends CI_Controller
 	{
 		session_destroy();
 		redirect($this->facebook->getLogoutUrl());
+	}
+
+	public function newsletter()
+	{
+		// loads the form_validation library
+		$this->load->library('form_validation');
+
+		// field name, error message, validation rules
+		$this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email');
+
+		if ($this->form_validation->run('newsletter') == false) {
+			// Error in name or email
+		} else {
+			$email = $this->input->post('email');
+
+			$this->load->library('email');
+			$this->email->set_newline("\r\n");
+
+			$this->email->from('xcode.test.project@gmail.com', 'Xcode');
+			$this->email->to($email);		
+			$this->email->subject('Xcode Newsletter Signup Confirmation');		
+			$this->email->message('You\'ve now signed up, fool!');
+
+			// $path = $this->config->system_url();
+			// $path = $this->config->item('server_root');
+			// $file = $path . '/ci_day4/attachments/newsletter1.txt';
+
+			// $this->email->attach($file);
+
+			if ($this->email->send()) {
+				// Load a view somekinda subscribing?
+			} else {
+				// Load a view somekinda error?
+			}
+		}
 	}
 }
