@@ -2,7 +2,11 @@
 
 $this->load->view('header');
 
-$this->load->view('home_view');
+$this->load->view('banner');
+
+$this->load->view('navbar');
+
+$this->load->view($page);
 
 $this->load->view('footer');
 

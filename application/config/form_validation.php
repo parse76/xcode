@@ -1,35 +1,16 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 $config = array(
-    'signup' => array(
+    'login' => array(
         array(
-            'field' => 'username',
-            'label' => 'Username',
-            'rules' => 'required'
+            'field' => 'email',
+            'label' => 'Email',
+            'rules' => 'required|trim|valid_email|min_length[4]'
         ),
         array(
             'field' => 'password',
             'label' => 'Password',
-            'rules' => 'required'
+            'rules' => 'required|trim|min_length[4]'
         )
-    ),
-    'email' => array(
-        array(
-            'field' => 'emailaddress',
-            'label' => 'EmailAddress',
-            'rules' => 'required|valid_email'
-        ),
-        array(
-            'field' => 'name',
-            'label' => 'Name',
-            'rules' => 'required|alpha'
-        )
-    ),
-    'newsletter' => array(
-        array(
-            'field' => 'email',
-            'label' => 'Email Address',
-            'rules' => 'trim|required|valid_email'
-        )
-    )                          
+    )                       
 );

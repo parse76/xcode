@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
 * Home
@@ -22,7 +22,8 @@ class Home extends CI_Controller
 
 	public function index()
 	{
-		$this->load->view('template');
+		$data['page'] = 'home_view';
+		$this->load->view('template', $data);
 	}
 
 	public function facebook_login()
