@@ -32,10 +32,17 @@ class Facebook extends BaseFacebook
    * @param Array $config the application configuration.
    * @see BaseFacebook::__construct in facebook.php
    */
-  public function __construct($config) {
+  public function __construct($config='') {
     if (!session_id()) {
       session_start();
     }
+
+    if (!$config) { // Fetch config from third_party_login.php if parameter is null
+      $this->CI =& get_instance();
+      $this->CI->config->load('third_party_login', TRUE);
+      $config = $this->CI->config->item('facebook', 'third_party_login'); 
+    }
+
     parent::__construct($config);
   }
 

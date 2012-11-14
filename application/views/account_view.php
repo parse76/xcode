@@ -5,7 +5,7 @@
 
 		<div class="row-fluid">
 			<div class="span6">
-				<form action="<?php echo base_url(); ?>account/login" method="post" accept-charset="utf-8" class="form-horizontal">
+				<form action="<?php echo base_url(); ?>verify" method="post" accept-charset="utf-8" class="form-horizontal">
                     <div class="control-group">
                         <label class="control-label" for="inputEmail">Email</label>
                         <div class="controls">
@@ -20,9 +20,6 @@
                     </div>
                     <div class="control-group">
                         <div class="controls">
-                            <label class="checkbox">
-                                <input type="checkbox"> Remember me
-                            </label>
                             <button type="submit" name="submit" class="btn">Sign in</button>
                         </div>
                     </div>
@@ -30,12 +27,12 @@
                 <?php echo validation_errors(); ?>
 			</div>
 			<div class="span6">
-                <?php echo validation_errors(); ?>
-                <?php echo form_open('account/login'); ?>
-                <?php echo form_input('email'); ?>
-                <?php echo form_password('password'); ?>
-                <?php echo form_submit('submit', 'Submit'); ?>
+                <a href="{base_url}register">Register Here!</a>
+                <?php echo form_open('subok'); ?>
+                <?php echo form_submit('name', 'value'); ?>
                 <?php echo form_close(); ?>
             </div>
 		</div>
+
+        <?php echo anchor('account/facebook_login', 'fb'); ?>
 		

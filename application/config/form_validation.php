@@ -1,11 +1,11 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 $config = array(
     'login' => array(
         array(
             'field' => 'email',
             'label' => 'Email',
-            'rules' => 'required|trim|valid_email|min_length[4]'
+            'rules' => 'required|trim|min_length[4]'
         ),
         array(
             'field' => 'password',
@@ -14,3 +14,6 @@ $config = array(
         )
     )                       
 );
+
+/* End of file form_validation.php */
+/* Location: ./application/config/form_validation.php */

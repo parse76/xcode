@@ -13,9 +13,9 @@
         <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
         <meta name="author" content="brynzky" />
         
-        <link href="<?php echo base_url(); ?>css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-        <link href="<?php echo base_url(); ?>css/main.css" rel="stylesheet" type="text/css" />
-        <script src="<?php echo base_url(); ?>js/modernizr-2.6.1-respond-1.1.0.min.js" type="text/javascript"></script>
+        <link href="{base_url}css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="{base_url}css/main.css" rel="stylesheet" type="text/css" />
+        <script src="{base_url}js/modernizr-2.6.1-respond-1.1.0.min.js" type="text/javascript"></script>
 
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
@@ -23,11 +23,11 @@
         <![endif]-->
 
         <!-- Le fav and touch icons -->
-        <link href="<?php echo base_url(); ?>favicon.ico" rel="shortcut icon" />
-        <link href="<?php echo base_url(); ?>apple-touch-icon-144x144-precomposed.png" rel="apple-touch-icon-precomposed" sizes="144x144" />
-        <link href="<?php echo base_url(); ?>apple-touch-icon-114x114-precomposed.png" rel="apple-touch-icon-precomposed" sizes="114x114" />
-        <link href="<?php echo base_url(); ?>apple-touch-icon-72x72-precomposed.png" rel="apple-touch-icon-precomposed" sizes="72x72" />
-        <link href="<?php echo base_url(); ?>apple-touch-icon-57x57-precomposed.png" rel="apple-touch-icon-precomposed" />
+        <link href="{base_url}favicon.ico" rel="shortcut icon" />
+        <link href="{base_url}apple-touch-icon-144x144-precomposed.png" rel="apple-touch-icon-precomposed" sizes="144x144" />
+        <link href="{base_url}apple-touch-icon-114x114-precomposed.png" rel="apple-touch-icon-precomposed" sizes="114x114" />
+        <link href="{base_url}apple-touch-icon-72x72-precomposed.png" rel="apple-touch-icon-precomposed" sizes="72x72" />
+        <link href="{base_url}apple-touch-icon-57x57-precomposed.png" rel="apple-touch-icon-precomposed" />
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -38,15 +38,15 @@
             <div class="navbar-inner">
                 <div class="container">
                     <div class="row-fluid">
-                        <a href="<?php echo base_url(); ?>home" class="brand active">Xcode</a>
+                        <a href="{base_url}home" class="brand active">Xcode</a>
                         <ul class="nav">
-                            <li><a href="#">Site Map</a></li>
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="{base_url}site_map">Site Map</a></li>
+                            <li><a href="{base_url}about_us">About Us</a></li>
+                            <li><a href="{base_url}contact_us">Contact Us</a></li>
                         </ul>
                         <ul class="nav pull-right">
                             <li><p>Welcome,</p></li>
-                            <li><p><a href="<?php echo base_url(); ?>account">( Sign In! )</a></p></li>
+                            <li><p><a href="{base_url}{link}">{username}</a></p></li>
                         </ul>
                     </div>
                 </div>

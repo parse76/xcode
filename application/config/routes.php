@@ -38,9 +38,28 @@
 |
 */
 
-//$route['default_controller'] = "welcome";
-$route['default_controller'] = 'home';
-$route['404_override'] = '';
+$route['default_controller'] = 'pages';
+$route['404_override'] = 'pages/page_missing';
+
+// Pages routes
+$route['home'] = 'pages/index';
+$route['site_map'] = 'pages/site_map';
+$route['about_us'] = 'pages/about_us';
+$route['contact_us'] = 'pages/contact_us';
+$route['404'] = 'pages/page_missing';
+
+// Account routes
+$route['login'] = 'account/login';
+$route['logout'] = 'account/logout';
+$route['register'] = 'account/register';
+$route['settings'] = 'account/settings';
+$route['account/debugger'] = 'account/debugger';
+// $route['account/(:any)'] = 'account/$1';
+// $route['account'] = 'pages/page_missing';
+// $route['account/(:any)'] = 'pages/page_missing';
+
+// Dynamic routes
+$route['(:any)'] = 'customer/profile/$1';
 
 
 /* End of file routes.php */

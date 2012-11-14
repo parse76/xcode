@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Users_model extends CI_Model
+class Profile extends CI_Controller
 {
 	public function __construct()
 	{
@@ -14,5 +14,5 @@ class Users_model extends CI_Model
 	}
 }
 
-/* End of file users_model.php */
-/* Location: ./application/models/users_model.php */
+/* End of file profile.php */
+/* Location: ./application/controllers/profile.php */
