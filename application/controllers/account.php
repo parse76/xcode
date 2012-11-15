@@ -46,20 +46,57 @@ class Account extends CI_Controller
 	// 			}
 	// 		}
 	// 	}
-	// }	
+	// }
 
-	public function login()
+	private function test()
 	{
-		$data['page'] = 'account_view';
-		$this->load->view('template', $data);
+		echo 'private method';
 	}
 
-	public function register()
+	private function validate_registration()
 	{
-		echo 'TODO: Register';
+		$routes = $this->router->routes;
+
+		foreach ($routes as $key => $value) {
+			if ($username == $key) {
+				echo 'Unauthorized username!';
+			}
+		}
+
+		if ($preg_match_condition) {
+			echo 'Invalid username!';
+		}
+
+		if ($match == true) {
+			echo 'Username already taken';
+		}
 	}
 
-	public function facebook_login()
+	private function default_login()
+	{
+		if (!$this->input->post()) {
+			redirect('home');
+		}
+
+		if ($this->form_validation->run('login') === false) {
+			$data['page'] = 'account_view';
+			$this->load->view('template', $data);
+		} else {
+			$user_info = array(
+				'username'  => $this->input->post('email'),
+				'authenticator' => 'default',
+				'logged_in' => true
+			);
+
+			$this->session->set_userdata($user_info);
+
+			// redirect('account/profile');
+			// redirect($this->input->post('email'));
+			redirect('home');
+		}
+	}
+
+	private function facebook_login()
 	{
 		$this->load->library('facebook');
 
@@ -128,37 +165,9 @@ class Account extends CI_Controller
 		}
 	}
 
-	public function twitter_login()
+	private function twitter_login()
 	{
 		echo 'TODO: Twitter Login';
-	}
-
-	public function settings()
-	{
-		echo 'TODO: Account settings';
-	}
-
-	public function logout()
-	{
-		// session_destroy();
-
-		$user_info = array(
-			'username'  => '',
-			'authenticator' => '',
-			'logged_in' => false
-		);
-
-		$this->session->unset_userdata($user_info);
-
-		redirect('home');
-
-		// redirect($this->facebook->getLogoutUrl());
-	}
-
-	public function debugger()
-	{
-		$this->load->helper('common_helper');
-		$this->load->view('profile_view');
 	}
 }
 

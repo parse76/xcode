@@ -5,7 +5,7 @@
 
 		<div class="row-fluid">
 			<div class="span6">
-				<form action="<?php echo base_url(); ?>verify" method="post" accept-charset="utf-8" class="form-horizontal">
+				<form action="{base_url}validate/login" method="post" accept-charset="utf-8" class="form-horizontal">
                     <div class="control-group">
                         <label class="control-label" for="inputEmail">Email</label>
                         <div class="controls">
@@ -31,6 +31,7 @@
                 <?php echo form_open('subok'); ?>
                 <?php echo form_submit('name', 'value'); ?>
                 <?php echo form_close(); ?>
+                <?php echo anchor('validate/test', 'linkname'); ?>
             </div>
 		</div>
 

@@ -1,0 +1,1 @@
+<?php echo anchor('validate', 'linkname'); ?>
