@@ -3,18 +3,48 @@
    ========================================================================== */
 
 body {
-	font-size: 13px;
+    font-size: 13px;
 }
 
 .banner {
-	height: 120px;
+    height: 120px;
 }
 
 .header, .banner {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .navbar .nav > li > p {
-  	float: none;
-  	padding: 10px 5px 0px;
+    float: none;
+    padding: 10px 5px 0px;
+}
+
+.recaptcha {
+    margin-left: 100px;
+}
+
+.license-agreement {
+    margin: 0 20px 0 100px;
+}
+
+.register-header {
+    margin-right: 50px;
+    margin-left: 50px;
+}
+
+.register-adds {
+    padding-top: 30px;
+    padding-left: 20px;
+}
+
+.register-add {
+    margin-bottom: 40px;
+}
+
+.thumbnail-label {
+    margin-top: 10px;
+}
+
+.social-networking {
+    margin-left: 60px;
 }

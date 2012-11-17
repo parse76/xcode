@@ -1,4 +1,4 @@
-			<hr>
+            <hr>
 
             <footer>
                 <p>&copy; Company 2012</p>
@@ -21,6 +21,12 @@
             (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
             g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
             s.parentNode.insertBefore(g,s)}(document,'script'));
+        </script>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+                 $('.carousel').carousel();
+            });
         </script>
     </body>
 </html>

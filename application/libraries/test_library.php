@@ -2,28 +2,28 @@
 
 class Test_library
 {
-	public function __construct($config='')
-	{
-		// $this->CI =& get_instance();
+    public function __construct($config='')
+    {
+        // $this->CI =& get_instance();
 
-		// if (!$config) {
-		// 	$this->CI->config->load('third_party_login', TRUE);
-		// 	$config = $this->CI->config->item('facebook', 'third_party_login');	
-		// }
+        // if (!$config) {
+        //  $this->CI->config->load('third_party_login', TRUE);
+        //  $config = $this->CI->config->item('facebook', 'third_party_login'); 
+        // }
 
-		// return $config;
-	}
+        // return $config;
+    }
 
-	public function sample($config='')
-	{
-		if (!$config) {
-			$this->CI =& get_instance();
-			$this->CI->config->load('third_party_login', TRUE);
-			$config = $this->CI->config->item('facebook', 'third_party_login');	
-		}
+    public function sample($config='')
+    {
+        if (!$config) {
+            $this->CI =& get_instance();
+            $this->CI->config->load('third_party_login', TRUE);
+            $config = $this->CI->config->item('facebook', 'third_party_login'); 
+        }
 
-		return $config;
-	}
+        return $config;
+    }
 }
 
 /* End of file test_library.php */
