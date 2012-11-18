@@ -52,7 +52,7 @@ class Test extends CI_Controller
             )
         );
 
-        $data2 = array('content' => $data);
+        $data2 = array('data' => $data);
         $data2['page'] = 'test_view';
 
         $this->load->view('template', $data2);

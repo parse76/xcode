@@ -67,7 +67,7 @@ $route['validate/(:any)'] = 'validate/$1';
 
 // Dynamic routes
 $route['(:any)/settings'] = 'account/settings';
-$route['(:any)'] = 'account/profile/$1';
+$route['(:any)'] = 'user/profile/$1';
 
 
 /* End of file routes.php */

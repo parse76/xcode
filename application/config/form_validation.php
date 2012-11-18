@@ -3,8 +3,8 @@
 $config = array(
     'login' => array(
         array(
-            'field' => 'email',
-            'label' => 'Email',
+            'field' => 'username',
+            'label' => 'Username',
             'rules' => 'required|trim|min_length[4]'
         ),
         array(

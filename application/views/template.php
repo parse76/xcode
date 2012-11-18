@@ -1,6 +1,18 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-// Template loader
+/**
+* Template Class
+* Handles all the view being processed
+*/
+class Template
+{
+	public function header_profile()
+	{
+		$username = $this->session->userdata('username');
+		$authenticator = $this->session->userdata('authenticator');
+		$logged_in = $this->session->userdata('logged_in');
+	}
+}
 
 $data['base_url'] = base_url();
 
@@ -20,12 +32,7 @@ $this->parser->parse('banner', $data);
 
 $this->parser->parse('navbar', $data);
 
-if (isset($content)) {
-    $content['base_url'] = base_url();
-    $this->parser->parse($page, $content);  
-} else {
-    $this->parser->parse($page, $data); 
-}
+$this->parser->parse($page, $data);  
 
 $this->parser->parse('footer', $data);
 

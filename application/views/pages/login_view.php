@@ -37,7 +37,7 @@
             <div class="span6">
                 <div class="row-fluid">
                     <div>
-                        <h3>Use you third party accounts<br><small>Login using facebook, twitter or google+</small></h3>
+                        <h3>Use your third party accounts<br><small>Login using facebook, twitter or google+</small></h3>
                         <a href="{base_url}validate/facebook">
                             <img src="http://www.indent.net.au/wp-content/uploads/2009/04/facebook-icon50x50.png" class="social-networking">
                         </a>

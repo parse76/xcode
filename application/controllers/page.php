@@ -41,7 +41,7 @@ class Page extends CI_Controller
     {
         $this->load->library('recaptcha');
 
-        $data['content'] = array(
+        $data['data'] = array(
             'recaptcha' => $this->recaptcha->recaptcha_get_html()
         );
 

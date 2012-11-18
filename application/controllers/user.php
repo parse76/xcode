@@ -8,11 +8,6 @@ class User extends CI_Controller
 		//Load Dependencies
 	}
 
-	public function index()
-	{
-		//Load Dependencies
-	}
-
 	public function profile()
 	{
 		$value =  $this->uri->segment(1);

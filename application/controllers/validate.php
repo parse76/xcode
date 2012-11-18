@@ -93,19 +93,17 @@ class Validate extends CI_Controller
         }
 
         if ($this->form_validation->run('login') === false) {
-            $data['page'] = 'account_view';
+            $data['page'] = 'pages/login_view';
             $this->load->view('template', $data);
         } else {
             $user_info = array(
-                'username'  => $this->input->post('email'),
+                'username'  => $this->input->post('username'),
                 'authenticator' => 'default',
                 'logged_in' => true
             );
 
             $this->session->set_userdata($user_info);
 
-            // redirect('account/profile');
-            // redirect($this->input->post('email'));
             redirect('home');
         }
     }

@@ -37,10 +37,10 @@ class Facebook extends BaseFacebook
       session_start();
     }
 
-    if (!$config) { // Fetch config from third_party_login.php if parameter is null
+    if (!$config) { // Fetch config from app_keys.php if parameter is null
       $this->CI =& get_instance();
-      $this->CI->config->load('third_party_login', TRUE);
-      $config = $this->CI->config->item('facebook', 'third_party_login'); 
+      $this->CI->config->load('app_keys', TRUE);
+      $config = $this->CI->config->item('facebook', 'app_keys'); 
     }
 
     parent::__construct($config);
