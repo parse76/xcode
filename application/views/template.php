@@ -6,15 +6,37 @@
 */
 class Template
 {
-	public function header_profile()
+	public $data;
+
+	protected $username;
+	protected $authenticator;
+	protected $logged_in;
+
+	public function __construct()
 	{
-		$username = $this->session->userdata('username');
-		$authenticator = $this->session->userdata('authenticator');
-		$logged_in = $this->session->userdata('logged_in');
+		$this->header_setters();
+	}
+
+	private function header_setters()
+	{
+		$this->data['base_url'] = base_url();
+		// $this->$username = $this->session->userdata('username');
+		// $this->$authenticator = $this->session->userdata('authenticator');
+		// $this->$logged_in = $this->session->userdata('logged_in');
+	}
+
+	public function preprint($data, $return = false) {
+		$data = "<pre>";
+		$data .= print_r($data, 1);
+		$data .= "</pre>";
+		if ($return) return $data;
+		else print $data;
 	}
 }
 
+
 $data['base_url'] = base_url();
+// $data['base_url'] = 'http://10.3.10.214/xcode/';
 
 $username = $this->session->userdata('username');
 

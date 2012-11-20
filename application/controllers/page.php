@@ -9,31 +9,31 @@ class Page extends CI_Controller
 
     public function index()
     {
-        $data['page'] = 'pages/home_view';
+        $data['page'] = 'page/home_view';
         $this->load->view('template', $data);
     }
 
     public function about_us()
     {
-        $data['page'] = 'pages/about_us_view';
+        $data['page'] = 'page/about_us_view';
         $this->load->view('template', $data);
     }
 
     public function contact_us()
     {
-        $data['page'] = 'pages/contact_us_view';
+        $data['page'] = 'page/contact_us_view';
         $this->load->view('template', $data);
     }
 
     public function site_map()
     {
-        $data['page'] = 'pages/site_map_view';
+        $data['page'] = 'page/site_map_view';
         $this->load->view('template', $data);
     }
 
     public function login()
     {
-        $data['page'] = 'pages/login_view';
+        $data['page'] = 'page/login_view';
         $this->load->view('template', $data);
     }
 
@@ -45,7 +45,7 @@ class Page extends CI_Controller
             'recaptcha' => $this->recaptcha->recaptcha_get_html()
         );
 
-        $data['page'] = 'pages/register_view';
+        $data['page'] = 'page/register_view';
         $this->load->view('template', $data);
     }
 
