@@ -53,7 +53,8 @@ $route['register'] = 'page/register';
 $route['logout'] = 'page/logout';
 $route['404'] = 'page/page_missing';
 
-$route['asd'] = 'test/captchatest';
+$route['test/sv1'] = 'test/sv1';
+$route['test/sv2'] = 'test/sv2';
 
 // Validate routes
 $route['validate'] = 'page/page_missing';

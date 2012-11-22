@@ -92,7 +92,33 @@ class Test extends CI_Controller
         echo $this->privkey;
         echo '<br>';
         echo $this->asd;
-    }   
+    }
+
+    public function sv1()
+    {
+        session_start();
+
+        $_SESSION['time'] = time();
+
+        session_cache_expire(1);
+
+        echo session_cache_expire();
+
+        echo anchor('test/sv2', 'linkname');        
+    }
+
+    public function sv2()
+    {
+        session_start();
+
+        echo session_cache_expire();
+
+        // echo $_SESSION['time'];        
+
+        // $test = $_SESSION ? 'alis ka muna' : 'wala na'; 
+
+        // echo $test;
+    }
 }
 
 /* End of file test.php */
