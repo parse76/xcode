@@ -20,9 +20,9 @@ class Google extends Google_Client
     	}
 
 		if (!$config) { // Fetch config from app_keys.php if parameter is null
-      		$this->CI =& get_instance();
-      		$this->CI->config->load('app_keys', TRUE);
-      		$config = $this->CI->config->item('google', 'app_keys'); 
+      		$this->ci =& get_instance();
+      		$this->ci->config->load('app_keys', TRUE);
+      		$config = $this->ci->config->item('google', 'app_keys'); 
     	}
 
 		$this->setApplicationName($config['appname']);
