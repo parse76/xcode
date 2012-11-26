@@ -2,16 +2,19 @@
 
 class Page extends CI_Controller
 {
+    private $params;
+
     public function __construct()
     {
         parent::__construct();
-
-        $this->output->enable_profiler(TRUE);
     }
 
     public function index()
     {
         $data['page'] = 'page/home_view';
+        $data['data'] = array(
+            'sample' => 'This test should be loaded in homepage.'
+        );
         $this->load->view('template', $data);
     }
 
@@ -56,7 +59,7 @@ class Page extends CI_Controller
         // session_destroy();
 
         $user_info = array(
-            'username'  => '',
+            'username' => '',
             'authenticator' => '',
             'logged_in' => false
         );

@@ -46,7 +46,7 @@
                         </ul>
                         <ul class="nav pull-right">
                             <li><p>Welcome,</p></li>
-                            <li><p><a href="{base_url}{link}">{username}</a></p></li>
+                            <li><p><a href="{base_url}{header_link}">{header_name}</a></p></li>
                         </ul>
                     </div>
                 </div>

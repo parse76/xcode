@@ -12,11 +12,19 @@
  */
 if ( ! function_exists('preprint'))
 {
-	function preprint($data, $return = false) {
+	function pre_print($data, $return = false)
+	{
 		$data = "<pre>";
 		$data .= print_r($data, 1);
 		$data .= "</pre>";
-		if ($return) return $data;
-		else print $data;
+		
+		if ($return) {
+			return $data;
+		} else {
+			print $data;
+		}
 	}
 }
+
+/* End of file common_helper.php */
+/* Location: ./application/helpers/common_helper.php */

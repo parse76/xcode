@@ -5,12 +5,14 @@ class Test extends CI_Controller
     protected $pubkey;
     protected $privkey;
     protected $asd = 2;
+    protected $params;
+    protected $data;
 
     public function __construct()
     {
         parent::__construct();
 
-
+        $this->data['sample1'];
     }
 
     public function index()
@@ -118,6 +120,18 @@ class Test extends CI_Controller
         // $test = $_SESSION ? 'alis ka muna' : 'wala na'; 
 
         // echo $test;
+    }
+
+    public function testoma()
+    {
+        $data = array();
+
+        $data['1'] = '1';
+        $data['2'] = '2';
+
+        $this->data['data'] = $data;
+
+        print_r($this->data);
     }
 }
 

@@ -8,23 +8,29 @@ class User extends CI_Controller
 		//Load Dependencies
 	}
 
+	// public function profile()
+	// {
+	// 	$value =  $this->uri->segment(1);
+
+	// 	$username = $this->session->userdata('username');
+	// 	$authenticator = $this->session->userdata('authenticator');
+	// 	$logged_in = $this->session->userdata('logged_in');
+
+	// 	if ($username == $value && $logged_in == true) {
+	// 		echo 'your profile';
+	// 	} else if ($username != $value && $logged_in === true) {
+	// 		echo 'not ur profile';
+	// 	} else {
+	// 		echo 'guest!';
+
+	// 		print_r($_COOKIE);
+	// 	}
+	// }
+
 	public function profile()
 	{
-		$value =  $this->uri->segment(1);
-
-		$username = $this->session->userdata('username');
-		$authenticator = $this->session->userdata('authenticator');
-		$logged_in = $this->session->userdata('logged_in');
-
-		if ($username == $value && $logged_in == true) {
-			echo 'your profile';
-		} else if ($username != $value && $logged_in === true) {
-			echo 'not ur profile';
-		} else {
-			echo 'guest!';
-
-			print_r($_COOKIE);
-		}
+		$data['page'] = 'user/profile_view';
+		$this->load->view('template', $data);
 	}
 
 	public function account_settings()
