@@ -229,9 +229,9 @@ class Validate extends CI_Controller
             print_r($_SESSION);
             print_r($_GET);
         } else {
-            $authUrl = $this->google->createAuthUrl();
-
-            echo anchor($authUrl, 'linkname');
+            // $authUrl = $this->google->createAuthUrl();
+            $authUrl = $this->google->createAuthUrl("https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile");
+            redirect($authUrl);
         }
     }
 }
