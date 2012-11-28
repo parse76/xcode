@@ -44,11 +44,27 @@ class Page extends CI_Controller
 
     public function register()
     {
+        $params = array();
+
         $this->load->library('recaptcha');
 
-        $data['data'] = array(
-            'recaptcha' => $this->recaptcha->recaptcha_get_html()
-        );
+        $params['recaptcha'] = $this->recaptcha->recaptcha_get_html();
+        
+        // Declaring blank set values
+        $params['firstname'] = '';
+        $params['lastname'] = '';
+        $params['email'] = '';
+        $params['username'] = '';
+
+        // Declaring blank error messages
+        $params['firstname_error'] = '';
+        $params['lastname_error'] = '';
+        $params['email_error'] = '';
+        $params['username_error'] = '';
+        $params['password_error'] = '';
+        $params['password2_error'] = '';
+
+        $data['data'] = $params;
 
         $data['page'] = 'page/register_view';
         $this->load->view('template', $data);

@@ -5,39 +5,44 @@ $config = array(
         array(
             'field' => 'username',
             'label' => 'Username',
-            'rules' => 'required|trim|min_length[4]'
+            'rules' => 'trim|required|min_length[4]|max_length[32]|xss_clean'
         ),
         array(
             'field' => 'password',
             'label' => 'Password',
-            'rules' => 'required|trim|min_length[4]'
+            'rules' => 'trim|required|min_length[4]|max_length[32]|xss_clean'
         )
     ),
-    'registration' => array(
+    'register' => array(
         array(
-            'field' => 'first_name',
+            'field' => 'firstname',
             'label' => 'First Name',
-            'rules' => 'required|trim|max_length[32]|xss_clean'
+            'rules' => 'trim|required|max_length[32]|xss_clean'
         ),
         array(
-            'field' => 'last_name',
+            'field' => 'lastname',
             'label' => 'Last Name',
-            'rules' => 'required|trim|max_length[32]|xss_clean'
+            'rules' => 'trim|required|max_length[32]|xss_clean'
         ),
         array(
             'field' => 'email',
             'label' => 'Email Address',
-            'rules' => 'required|trim|max_length[32]|xss_clean'
+            'rules' => 'trim|required|valid_email|max_length[254]|xss_clean'
         ),
         array(
             'field' => 'username',
             'label' => 'Username',
-            'rules' => 'required|trim|max_length[32]|xss_clean'
+            'rules' => 'trim|required|min_length[4]|max_length[32]|xss_clean'
         ),
         array(
             'field' => 'password',
             'label' => 'Password',
-            'rules' => 'required|trim|max_length[32]|xss_clean'
+            'rules' => 'trim|required|min_length[4]|max_length[32]|xss_clean'
+        ),
+        array(
+            'field' => 'password2',
+            'label' => 'Password Confirmation',
+            'rules' => 'trim|required|min_length[4]|max_length[32]|xss_clean|matches[password]'
         )
     )
 );

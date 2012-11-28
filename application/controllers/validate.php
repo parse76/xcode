@@ -28,7 +28,7 @@ class Validate extends CI_Controller
 
         switch ($value) {
             case 'register':
-                $this->validate_registration();
+                $this->validate_register();
                 break;
 
             case 'login':
@@ -53,8 +53,10 @@ class Validate extends CI_Controller
         }
     }
 
-    private function validate_registration()
+    private function validate_register()
     {
+        $params = array();
+
         $this->load->library('recaptcha');
 
         // $routes = $this->router->routes;
@@ -76,14 +78,37 @@ class Validate extends CI_Controller
 
         $response = $this->recaptcha->recaptcha_check_answer();
 
+        if ($this->form_validation->run('register') === false) {
+            $data['page'] = 'page/register_view';
+
+            // Reload captcha
+            $params['recaptcha'] = $this->recaptcha->recaptcha_get_html();
+            
+            // Re-populate the form with submitted values
+            $params['firstname'] = set_value('firstname');
+            $params['lastname'] = set_value('lastname');
+            $params['email'] = set_value('email');
+            $params['username'] = set_value('username');
+
+            // Set error messages
+            $params['firstname_error'] = form_error('firstname');
+            $params['lastname_error'] = form_error('lastname');
+            $params['email_error'] = form_error('email');
+            $params['username_error'] = form_error('username');
+            $params['password_error'] = form_error('password');
+            $params['password2_error'] = form_error('password2');
+            $params['gender_error'] = form_error('gender');
+        }
+
         if (!$response->is_valid) {
             $this->recaptcha->error = $response->error;
-            echo $this->recaptcha->recaptcha_get_html();
 
-            // echo "The reCAPTCHA wasn't entered correctly. Go back and try it again." . "(reCAPTCHA said: " . $response->error . ")";
-        } else {
-            echo 'Good nagawa mo rin pogi!';
+            $params['recaptcha'] = $this->recaptcha->recaptcha_get_html();
         }
+
+        $data['data'] = $params;
+
+        $this->load->view('template', $data);
     }
 
     private function default_login()
@@ -93,7 +118,7 @@ class Validate extends CI_Controller
         }
 
         if ($this->form_validation->run('login') === false) {
-            $data['page'] = 'pages/login_view';
+            $data['page'] = 'page/login_view';
             $this->load->view('template', $data);
         } else {
             $user_info = array(
@@ -200,7 +225,8 @@ class Validate extends CI_Controller
         }
 
         if ($this->google->getAccessToken()) {
-            $user = $this->google->google_plus->people->get('me');
+            $plus_response = $this->google->plus->people->get('me');
+            $oauth2_response = $this->google->oauth2->userinfo->get();
 
             // // These fields are currently filtered through the PHP sanitize filters.
             // // See http://www.php.net/manual/en/filter.filters.sanitize.php
@@ -210,7 +236,7 @@ class Validate extends CI_Controller
             // $personMarkup = "<a rel='me' href='$url'>$name</a><div><img src='$img'></div>";
 
             // $optParams = array('maxResults' => 100);
-            // $activities = $this->google->google_plus->activities->listActivities('me', 'public', $optParams);
+            // $activities = $this->google->plus->activities->listActivities('me', 'public', $optParams);
             // $activityMarkup = '';
             
             // foreach($activities['items'] as $activity) {
@@ -223,14 +249,49 @@ class Validate extends CI_Controller
             // }
 
             // The access token may have been updated lazily.
-            $_SESSION['access_token'] = $this->google->getAccessToken();
+            // $_SESSION['access_token'] = $this->google->getAccessToken();
 
-            print_r($user);
-            print_r($_SESSION);
-            print_r($_GET);
+            if ($plus_response['isPlusUser'] != true) {
+                // must activate google+ first
+            }
+
+            if ($oauth2_response['verified_email'] != true) {
+                // must verify email first
+            }
+
+            $google_id = $oauth2_response['id'];
+            // select from user where google_id = $google_id
+            // if (true) {
+            //     redirect to profile
+            // } else {
+            //     redirect to register
+                $_POST['firstname'] = $oauth2_response['given_name'];
+                $_POST['lastname'] = $oauth2_response['family_name'];
+                $_POST['email'] = $oauth2_response['email'];
+                $_POST['gender'] = $oauth2_response['gender'];
+
+                if ($this->form_validation->run('register') === false) {
+                    $data['page'] = 'pages/register';
+                    $this->load->view('template', $data);
+                }
+            // }
+
+            
+
+            var_dump($plus_response);
+            foreach ($plus_response as $key => $value) {
+                echo $key.' => '.$value.'<br>';
+            }
+            echo '<hr>';
+            var_dump($oauth2_response);
+            foreach ($oauth2_response as $key => $value) {
+                echo $key.' => '.$value.'<br>';
+            }
+            // print_r($_SESSION);
+            // print_r($_GET);
         } else {
             // $authUrl = $this->google->createAuthUrl();
-            $authUrl = $this->google->createAuthUrl("https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile");
+            $authUrl = $this->google->createAuthUrl();
             redirect($authUrl);
         }
     }

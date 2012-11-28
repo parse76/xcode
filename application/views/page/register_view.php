@@ -39,31 +39,43 @@
                     <div class="control-group">
                         <label class="control-label" for="firstname">First Name:</label>
                         <div class="controls">
-                            <input type="text" name="firstname" id="firstname" placeholder="First Name">
+                            <input type="text" name="firstname" id="firstname" placeholder="First Name" value="{firstname}">
+                            <label>{firstname_error}</label>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="lastname">Last Name:</label>
                         <div class="controls">
-                            <input type="text" name="lastname" id="lastname" placeholder="Last Name">
+                            <input type="text" name="lastname" id="lastname" placeholder="Last Name" value="{lastname}">
+                            <label>{lastname_error}</label>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="username">Usrname:</label>
+                        <label class="control-label" for="email">Email:</label>
                         <div class="controls">
-                            <input type="text" name="username" id="username" placeholder="Username">
+                            <input type="text" name="email" id="email" placeholder="Email" value="{email}">
+                            <label>{email_error}</label>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="username">Username:</label>
+                        <div class="controls">
+                            <input type="text" name="username" id="username" placeholder="Username" value="{username}">
+                            <label>{username_error}</label>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="password">Password:</label>
                         <div class="controls">
                             <input type="password" name="password" id="password" placeholder="Password">
+                            <label>{password_error}</label>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="password2">Re-type Password:</label>
                         <div class="controls">
                             <input type="password" name="password2" id="password2" placeholder="Password">
+                            <label>{password2_error}</label>
                         </div>
                     </div>
                     <div class="control-group">
