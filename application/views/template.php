@@ -8,27 +8,27 @@
 //   	$_SESSION['CREATED'] = time();  // update creation time
 // }
 
-$data['base_url'] = base_url();
+$content['base_url'] = base_url();
 
 $username = $this->session->userdata('username');
 
 if ($username) {
-    $data['header_name'] = $username;
-    $data['header_link'] = $username;
+    $content['header_name'] = $username;
+    $content['header_link'] = $username;
 } else {
-    $data['header_name'] = '( Sign In! )';
-    $data['header_link'] = 'login';
+    $content['header_name'] = '( Sign In! )';
+    $content['header_link'] = 'login';
 }
 
-$this->parser->parse('header', $data);
+$this->parser->parse('header', $content);
 
-$this->parser->parse('banner', $data);
+$this->parser->parse('banner', $content);
 
-$this->parser->parse('navbar', $data);
+$this->parser->parse('navbar', $content);
 
-$this->parser->parse($page, $data);
+$this->parser->parse($page, $content);
 
-$this->parser->parse('footer', $data);
+$this->parser->parse('footer', $content);
 
 /* End of file template.php */
 /* Location: ./application/views/template.php */

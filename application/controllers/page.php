@@ -12,9 +12,6 @@ class Page extends CI_Controller
     public function index()
     {
         $data['page'] = 'page/home_view';
-        $data['data'] = array(
-            'sample' => 'This test should be loaded in homepage.'
-        );
         $this->load->view('template', $data);
     }
 
@@ -64,7 +61,7 @@ class Page extends CI_Controller
         $params['password_error'] = '';
         $params['password2_error'] = '';
 
-        $data['data'] = $params;
+        $data['content'] = $params;
 
         $data['page'] = 'page/register_view';
         $this->load->view('template', $data);

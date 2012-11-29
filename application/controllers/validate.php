@@ -76,14 +76,16 @@ class Validate extends CI_Controller
         //  echo 'Username already taken';
         // }
 
+        $validator = $this->form_validation->run('register');
         $response = $this->recaptcha->recaptcha_check_answer();
 
-        if ($this->form_validation->run('register') === false) {
+        if ($validator === false || !$response->is_valid) {
             $data['page'] = 'page/register_view';
 
-            // Reload captcha
+            // Reload recaptcha with or without errors
+            $this->recaptcha->error = $response->error;
             $params['recaptcha'] = $this->recaptcha->recaptcha_get_html();
-            
+
             // Re-populate the form with submitted values
             $params['firstname'] = set_value('firstname');
             $params['lastname'] = set_value('lastname');
@@ -97,16 +99,13 @@ class Validate extends CI_Controller
             $params['username_error'] = form_error('username');
             $params['password_error'] = form_error('password');
             $params['password2_error'] = form_error('password2');
-            $params['gender_error'] = form_error('gender');
+        } else if ($validator === true && $response->is_valid) {
+            echo "TODO: Redirect to home or profile page";
+        } else {
+            echo "TODO: There's something wrong in the registration!";
         }
 
-        if (!$response->is_valid) {
-            $this->recaptcha->error = $response->error;
-
-            $params['recaptcha'] = $this->recaptcha->recaptcha_get_html();
-        }
-
-        $data['data'] = $params;
+        $data['content'] = $params;
 
         $this->load->view('template', $data);
     }
@@ -212,7 +211,10 @@ class Validate extends CI_Controller
 
     private function google_login()
     {
+        $params = array();
+
         $this->load->library('google');
+        $this->load->library('recaptcha');
 
         if (isset($_GET['code'])) {
             $this->google->authenticate($_GET['code']);
@@ -227,6 +229,10 @@ class Validate extends CI_Controller
         if ($this->google->getAccessToken()) {
             $plus_response = $this->google->plus->people->get('me');
             $oauth2_response = $this->google->oauth2->userinfo->get();
+
+            if (!$plus_response) {
+                echo 'something wrong';
+            }
 
             // // These fields are currently filtered through the PHP sanitize filters.
             // // See http://www.php.net/manual/en/filter.filters.sanitize.php
@@ -265,30 +271,45 @@ class Validate extends CI_Controller
             //     redirect to profile
             // } else {
             //     redirect to register
-                $_POST['firstname'] = $oauth2_response['given_name'];
-                $_POST['lastname'] = $oauth2_response['family_name'];
-                $_POST['email'] = $oauth2_response['email'];
-                $_POST['gender'] = $oauth2_response['gender'];
 
-                if ($this->form_validation->run('register') === false) {
-                    $data['page'] = 'pages/register';
-                    $this->load->view('template', $data);
-                }
+                // Set error messages
+            $params['firstname_error'] = '';
+            $params['lastname_error'] = '';
+            $params['email_error'] = '';
+            $params['username_error'] = '';
+            $params['password_error'] = '';
+            $params['password2_error'] = '';
+
+                $gmail = $oauth2_response['email'];
+                $gmail_username = substr($gmail, 0, strpos($gmail, '@'));
+
+                $params['firstname'] = $oauth2_response['given_name'];
+                $params['lastname'] = $oauth2_response['family_name'];
+                $params['email'] = $oauth2_response['email'];
+                $params['username'] = $gmail_username;
+                $params['recaptcha'] = $this->recaptcha->recaptcha_get_html();
+
+                
             // }
 
             
 
-            var_dump($plus_response);
-            foreach ($plus_response as $key => $value) {
-                echo $key.' => '.$value.'<br>';
-            }
-            echo '<hr>';
-            var_dump($oauth2_response);
-            foreach ($oauth2_response as $key => $value) {
-                echo $key.' => '.$value.'<br>';
-            }
+            // var_dump($plus_response);
+            // foreach ($plus_response as $key => $value) {
+            //     echo $key.' => '.$value.'<br>';
+            // }
+            // echo '<hr>';
+            // var_dump($oauth2_response);
+            // foreach ($oauth2_response as $key => $value) {
+            //     echo $key.' => '.$value.'<br>';
+            // }
             // print_r($_SESSION);
             // print_r($_GET);
+
+                $data['content'] = $params;
+                $data['page'] = 'page/register_view';
+            $this->load->view('template', $data);
+
         } else {
             // $authUrl = $this->google->createAuthUrl();
             $authUrl = $this->google->createAuthUrl();
