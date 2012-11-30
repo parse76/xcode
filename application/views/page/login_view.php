@@ -12,7 +12,7 @@
                     <div class="control-group">
                         <label class="control-label" for="username">Username:</label>
                         <div class="controls">
-                            <input type="text" name="username" id="username" placeholder="Username">
+                            <input type="text" name="username" id="username" placeholder="Username" value="{username}">
                         </div>
                     </div>
                     <div class="control-group">
@@ -32,7 +32,7 @@
                         </div>
                     </div>
                 </form>
-                <?php echo validation_errors(); ?>
+                {login_error}
             </div>
             <div class="span6">
                 <div class="row-fluid">

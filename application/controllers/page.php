@@ -35,6 +35,12 @@ class Page extends CI_Controller
 
     public function login()
     {
+        $params = array();
+
+        $params['username'] = '';
+        $params['login_error'] = '';
+
+        $data['content'] = $params;
         $data['page'] = 'page/login_view';
         $this->load->view('template', $data);
     }

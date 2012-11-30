@@ -112,14 +112,22 @@ class Validate extends CI_Controller
 
     private function default_login()
     {
+        $params = array();
+
+        // Since no theres post data, nothing todo
         if (!$this->input->post()) {
             redirect('home');
         }
 
-        if ($this->form_validation->run('login') === false) {
-            $data['page'] = 'page/login_view';
-            $this->load->view('template', $data);
-        } else {
+        // form validation
+        // database check
+
+        // $validator = $this->form_validation->run('login');
+        // $verifier = if found in database;
+
+        if ($this->form_validation->run('login') === true) {
+            // Database validation here
+
             $user_info = array(
                 'username'  => $this->input->post('username'),
                 'authenticator' => 'default',
@@ -129,6 +137,14 @@ class Validate extends CI_Controller
             $this->session->set_userdata($user_info);
 
             redirect('home');
+        } else {
+            $params['username'] = $this->input->post('username');
+            $params['login_error'] = 'Either Username or Password is incorrect';
+
+            $data['content'] = $params;
+            $data['page'] = 'page/login_view';
+
+            $this->load->view('template', $data);
         }
     }
 

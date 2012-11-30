@@ -133,6 +133,24 @@ class Test extends CI_Controller
 
         print_r($this->data);
     }
+
+    public function continue_test()
+    {
+        // for ($i = 0; $i < 5; ++$i) {
+        //     if ($i == 2)
+        //         continue;
+        //     print "$i\n";
+        // }
+
+        $x = TRUE;
+        $y = TRUE;
+
+        if ($x && $y) {
+            echo 'good';
+        } else {
+            echo 'bad';
+        }
+    }
 }
 
 /* End of file test.php */
