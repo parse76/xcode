@@ -151,6 +151,11 @@ class Test extends CI_Controller
             echo 'bad';
         }
     }
+
+    public function testoma2()
+    {
+        $this->twitter_login();
+    }
 }
 
 /* End of file test.php */
