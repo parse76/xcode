@@ -154,7 +154,7 @@ class Test extends CI_Controller
 
     public function testoma2()
     {
-        $this->twitter_login();
+        var_dump(form_error('username'));
     }
 }
 

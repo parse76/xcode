@@ -92,18 +92,20 @@ class Validate extends CI_Controller
             $params['email'] = set_value('email');
             $params['username'] = set_value('username');
 
-            // Set error messages
+            
+        } else if ($validator === true && $response->is_valid) {
+            echo "TODO: Redirect to home or profile page";
+        } else {
+            echo "TODO: There's something wrong in the registration!";
+        }
+
+        // Set error messages
             $params['firstname_error'] = form_error('firstname');
             $params['lastname_error'] = form_error('lastname');
             $params['email_error'] = form_error('email');
             $params['username_error'] = form_error('username');
             $params['password_error'] = form_error('password');
             $params['password2_error'] = form_error('password2');
-        } else if ($validator === true && $response->is_valid) {
-            echo "TODO: Redirect to home or profile page";
-        } else {
-            echo "TODO: There's something wrong in the registration!";
-        }
 
         $data['content'] = $params;
 
