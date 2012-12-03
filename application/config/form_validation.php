@@ -37,12 +37,12 @@ $config = array(
         array(
             'field' => 'password',
             'label' => 'Password',
-            'rules' => 'trim|required|min_length[4]|max_length[32]|xss_clean'
+            'rules' => 'trim|required|min_length[8]|xss_clean'
         ),
         array(
             'field' => 'password2',
             'label' => 'Password Confirmation',
-            'rules' => 'trim|required|min_length[4]|max_length[32]|xss_clean|matches[password]'
+            'rules' => 'trim|required|matches[password]|xss_clean'
         )
     )
 );

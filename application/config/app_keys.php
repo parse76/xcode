@@ -11,17 +11,17 @@ $config = array(
         'secret' => 'test',
         'cookie' => true
     ),
-    'recaptcha' => array(
-        'pubkey' => '6LdOKtkSAAAAAD9XwgYlqRfPF0kt3NiUtbqRKAIl',
-        'privkey' => '6LdOKtkSAAAAAKtb4TC1StwoZgphm61t64BjvX-a'
-    ),
     'google' => array(
         'appname' => 'Xcode',
         'clientid' => '88014352921.apps.googleusercontent.com',
         'clientsecret' => 'n3u27xTLaEGwNG56dPOAA6Yq',
-        'redirecturi' => 'http://localhost/xcode/validate/google',
+        'redirecturi' => 'http://localhost/xcode/account/google',
         'developerkey' => 'AIzaSyCIqvVhFHpLAoAawsO7b-LKApe9rePQ7TA'
-    )     
+    ),
+    'recaptcha' => array(
+        'pubkey' => '6LdOKtkSAAAAAD9XwgYlqRfPF0kt3NiUtbqRKAIl',
+        'privkey' => '6LdOKtkSAAAAAKtb4TC1StwoZgphm61t64BjvX-a'
+    )  
 );
 
 /* End of file third_party_login.php */

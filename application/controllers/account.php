@@ -9,19 +9,15 @@ class Account extends CI_Controller
 
     public function login()
     {
-        $params = array();
-
         if ($this->input->post())
         {
             if ($this->form_validation->run('login') === TRUE)
             {
                 // Database validation here
 
-                $login_data = array(
-                    'username' = $this->input->post('username'),
-                    'authenticator' = 'default',
-                    'logged_in' = TRUE
-                );
+                $login_data['username'] = $this->input->post('username');
+                $login_data['authenticator'] = 'default';
+                $login_data['logged_in'] = TRUE;
 
                 $this->session->set_userdata($login_data);
 
@@ -47,11 +43,10 @@ class Account extends CI_Controller
 
     public function register()
     {
-        $params = array();
-
         $this->load->library('recaptcha');
 
-        $authenticator = $this->sesseion->userdata('authenticator');
+        // Check if referred by third part accounts
+        $authenticator = $this->session->flashdata('authenticator');
 
         if ($this->input->post())
         {
@@ -78,12 +73,12 @@ class Account extends CI_Controller
         {
             if ($authenticator)
             {
-                $register_data = $this->session->all_userdata();
-
-                $params['firstname'] = $register_data['firstname'];
-                $params['lastname'] = $register_data['lastname'];
-                $params['email'] = $register_data['email'];
-                $params['username'] = $register_data['username'];
+                // $register_data = $this->session->all_userdata();
+                $params['authenticator'] = $this->session->flashdata('authenticator');
+                $params['firstname'] = $this->session->flashdata('firstname');
+                $params['lastname'] = $this->session->flashdata('lastname');
+                $params['email'] = $this->session->flashdata('email');
+                $params['username'] = $this->session->flashdata('username');
             }
             else
             {
@@ -95,7 +90,7 @@ class Account extends CI_Controller
             }
         }
 
-        // Set error messages
+        // Set error messages, returns blank if no error
         $params['firstname_error'] = form_error('firstname');
         $params['lastname_error'] = form_error('lastname');
         $params['email_error'] = form_error('email');
@@ -106,35 +101,128 @@ class Account extends CI_Controller
         $params['recaptcha'] = $this->recaptcha->recaptcha_get_html();
 
         $data['content'] = $params;
-        $data['page'] = 'register';
+        $data['page'] = 'register_view';
 
         $this->load->view('template', $data);
     }
 
+    public function facebook()
+    {
+        $this->load->library('facebook');
+
+        //Get the FB UID of the currently logged in user
+        $facebook_id = $this->facebook->getUser();
+
+        //if the user has already allowed the application, you'll be able to get his/her FB UID
+        if ($facebook_id)
+        {                        
+            //get the user's access token
+            $access_token = $this->facebook->getAccessToken();
+            //check permissions list
+            $permissions_list = $this->facebook->api(
+                '/me/permissions',
+                'GET',
+                array(
+                    'access_token' => $access_token
+                )
+            );
+            
+            //check if the permissions we need have been allowed by the user
+            //if not then redirect them again to facebook's permissions page
+            $permissions_needed = array('publish_stream', 'email');
+
+            foreach($permissions_needed as $perm)
+            {
+                if( !isset($permissions_list['data'][0][$perm]) || $permissions_list['data'][0][$perm] != 1 )
+                {
+                    $login_url_params = array(
+                        'scope' => 'publish_stream, email',
+                        'fbconnect' =>  1,
+                        'display'   =>  "page",
+                        'next' => 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']
+                    );
+                    
+                    $login_url = $this->facebook->getLoginUrl($login_url_params);
+                    // header("Location: {$login_url}");
+                    redirect($login_url);
+                    exit();
+                }
+            }
+            
+            //save the information inside the session
+            $_SESSION['access_token'] = $access_token;
+
+            // select from user where facebook_id = $facebook_id
+            // if (true) {
+            //     redirect to profile
+            // } else {
+            
+                $open_graph = $this->facebook->api('me');
+
+                $facebook_data['authenticator'] = 'facebook';
+                $facebook_data['facebook_id'] =  $open_graph['id'];
+                $facebook_data['firstname'] =  $open_graph['first_name'];
+                $facebook_data['lastname'] =  $open_graph['last_name'];
+                $facebook_data['email'] =  $open_graph['email'];
+                $facebook_data['username'] =  $open_graph['username'];
+
+                $this->session->set_flashdata($facebook_data);
+
+                redirect('account/register');
+            // }
+        }
+        else
+        {
+            //if not, let's redirect to the ALLOW page so we can get access
+            //Create a login URL using the Facebook library's getLoginUrl() method
+            $login_url_params = array(
+                'scope' => 'publish_stream, email',
+                'fbconnect' =>  1,
+                'display'   =>  "page",
+                'next' => 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']
+            );
+
+            $login_url = $this->facebook->getLoginUrl($login_url_params);
+            
+            //redirect to the login URL on facebook
+            // header("Location: {$login_url}");
+            redirect($login_url);
+            exit();
+        }
+    }
+
+    public function twitter()
+    {
+        echo 'TODO: twitter connect app';
+    }
+
     public function google()
     {
-        $params = array();
-
         $this->load->library('google');
 
-        if (isset($_GET['code'])) {
+        if (isset($_GET['code']))
+        {
             $this->google->authenticate($_GET['code']);
             $_SESSION['access_token'] = $this->google->getAccessToken();
         }
 
-        if (isset($_SESSION['access_token'])) {
+        if (isset($_SESSION['access_token']))
+        {
             $this->google->setAccessToken($_SESSION['access_token']);
         }
 
-        if ($this->google->getAccessToken()) {
+        if ($this->google->getAccessToken())
+        {
             $plus_response = $this->google->plus->people->get('me');
             $oauth2_response = $this->google->oauth2->userinfo->get();
 
-            if ($plus_response['isPlusUser'] != true) {
+            if ($plus_response['isPlusUser'] != TRUE)
+            {
                 // must activate google+ first
             }
 
-            if ($oauth2_response['verified_email'] != true) {
+            if ($oauth2_response['verified_email'] != TRUE)
+            {
                 // must verify email first
             }
 
@@ -143,41 +231,44 @@ class Account extends CI_Controller
             // if (true) {
             //     redirect to profile
             // } else {
-            //     redirect to register
-
-                // Set error messages
 
                 $gmail = $oauth2_response['email'];
                 $google_username = substr($gmail, 0, strpos($gmail, '@'));
 
-                $params['authenticator'] = 'google';
-                $params['google_id'] = $oauth2_response['id'];
-                $params['firstname'] = $oauth2_response['given_name'];
-                $params['lastname'] = $oauth2_response['family_name'];
-                $params['email'] = $oauth2_response['email'];
-                $params['username'] = $google_username;
+                $google_data['authenticator'] = 'google';
+                $google_data['google_id'] = $oauth2_response['id'];
+                $google_data['firstname'] = $oauth2_response['given_name'];
+                $google_data['lastname'] = $oauth2_response['family_name'];
+                $google_data['email'] = $oauth2_response['email'];
+                $google_data['username'] = $google_username;
 
-                $this->session->set_userdata($params);
+                $this->session->set_flashdata($google_data);
 
-                redirect('register');
+                redirect('account/register');
             // }
-
-            
-
-            // var_dump($plus_response);
-            // foreach ($plus_response as $key => $value) {
-            //     echo $key.' => '.$value.'<br>';
-            // }
-            // echo '<hr>';
-            // var_dump($oauth2_response);
-            // foreach ($oauth2_response as $key => $value) {
-            //     echo $key.' => '.$value.'<br>';
-            // }
-            // print_r($_SESSION);
-            // print_r($_GET);
+        }
+        else
+        {
+            // $authUrl = $this->google->createAuthUrl();
+            redirect($this->google->createAuthUrl());
         }
     }
-}           
+
+    public function logout()
+    {
+        // session_destroy();
+
+        $user_info = array(
+            'username' => '',
+            'authenticator' => '',
+            'logged_in' => false
+        );
+
+        $this->session->unset_userdata($user_info);
+
+        redirect('home');
+    }
+}
 
 /* End of file account.php */
 /* Location: ./application/controllers/account.php */

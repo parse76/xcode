@@ -154,7 +154,9 @@ class Test extends CI_Controller
 
     public function testoma2()
     {
-        var_dump(form_error('username'));
+        $x['1'] = 'asd';
+        $x['2'] = 'ddd';
+        print_r($x);
     }
 }
 
