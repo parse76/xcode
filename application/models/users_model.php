@@ -5,12 +5,6 @@ class Users_model extends CI_Model
 	public function __construct()
 	{
 		parent::__construct();
-		//Load Dependencies
-	}
-
-	public function index()
-	{
-		//Load Dependencies
 	}
 }
 
