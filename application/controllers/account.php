@@ -5,6 +5,8 @@ class Account extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+
+        $this->load->model('account_model');
     }
 
     public function login()
@@ -55,10 +57,20 @@ class Account extends CI_Controller
             
             if ($validator === TRUE && $response->is_valid)
             {
-                echo "TODO: Redirect to home or profile page";
+                $register_data = array_slice($this->input->post(NULL, TRUE),0, 5);
+
+                var_dump($register_data);
+                // var_dump($this->input->post(NULL, TRUE));
             }
             else
             {
+                // Preserve authentication is register fails
+                if ($authenticator)
+                {
+                    $this->session->keep_flashdata('authenticator');
+                    $this->session->keep_flashdata('authenticator_id');
+                }
+
                 // Get recaptcha error
                 $this->recaptcha->error = $response->error;
 
@@ -73,12 +85,14 @@ class Account extends CI_Controller
         {
             if ($authenticator)
             {
-                // $register_data = $this->session->all_userdata();
                 $params['authenticator'] = $this->session->flashdata('authenticator');
                 $params['firstname'] = $this->session->flashdata('firstname');
                 $params['lastname'] = $this->session->flashdata('lastname');
                 $params['email'] = $this->session->flashdata('email');
                 $params['username'] = $this->session->flashdata('username');
+
+                $this->session->keep_flashdata('authenticator');
+                $this->session->keep_flashdata('authenticator_id');
             }
             else
             {
@@ -152,15 +166,16 @@ class Account extends CI_Controller
             //save the information inside the session
             $_SESSION['access_token'] = $access_token;
 
-            // select from user where facebook_id = $facebook_id
-            // if (true) {
-            //     redirect to profile
-            // } else {
-            
+            if ($this->account_model->third_party_login('facebook', $facebook_id) == 1)
+            {
+                echo "redirect to profile";
+            }
+            else
+            {
                 $open_graph = $this->facebook->api('me');
 
                 $facebook_data['authenticator'] = 'facebook';
-                $facebook_data['facebook_id'] =  $open_graph['id'];
+                $facebook_data['authenticator_id'] =  $open_graph['id'];
                 $facebook_data['firstname'] =  $open_graph['first_name'];
                 $facebook_data['lastname'] =  $open_graph['last_name'];
                 $facebook_data['email'] =  $open_graph['email'];
@@ -169,7 +184,7 @@ class Account extends CI_Controller
                 $this->session->set_flashdata($facebook_data);
 
                 redirect('account/register');
-            // }
+            }
         }
         else
         {
@@ -227,25 +242,27 @@ class Account extends CI_Controller
             }
 
             $google_id = $oauth2_response['id'];
-            // select from user where google_id = $google_id
-            // if (true) {
-            //     redirect to profile
-            // } else {
 
-                $gmail = $oauth2_response['email'];
-                $google_username = substr($gmail, 0, strpos($gmail, '@'));
-
+            $gmail = $oauth2_response['email'];
+            $oauth2_response['username'] = substr($gmail, 0, strpos($gmail, '@'));
+            
+            if ($this->account_model->third_party_login('google', $google_id) == 1)
+            {
+                echo "redirect to profile";
+            }
+            else
+            {
                 $google_data['authenticator'] = 'google';
-                $google_data['google_id'] = $oauth2_response['id'];
+                $google_data['authenticator_id'] = $oauth2_response['id'];
                 $google_data['firstname'] = $oauth2_response['given_name'];
                 $google_data['lastname'] = $oauth2_response['family_name'];
                 $google_data['email'] = $oauth2_response['email'];
-                $google_data['username'] = $google_username;
+                $google_data['username'] = $oauth2_response['username'];
 
                 $this->session->set_flashdata($google_data);
 
                 redirect('account/register');
-            // }
+            }
         }
         else
         {
@@ -261,7 +278,7 @@ class Account extends CI_Controller
         $user_info = array(
             'username' => '',
             'authenticator' => '',
-            'logged_in' => false
+            'logged_in' => FALSE
         );
 
         $this->session->unset_userdata($user_info);

@@ -25,7 +25,20 @@ class Account_model extends CI_Model
 
 	public function register_user()
 	{
+		$this->db->trans_start();
+
 		
+
+		$this->db->trans_complete();
+
+		if ($this->db->trans_status() === TRUE)
+		{
+			// asd
+		}
+		else
+		{
+			// ddd
+		}
 	}
 
 	public function third_party_login($authenticator, $authenticator_id)
@@ -36,13 +49,13 @@ class Account_model extends CI_Model
 		$this->db->from('users');
 		$this->db->where($authenticator, $authenticator_id);
 		$this->db->limit(1);
-		$query = $this->db->get()->num_rows();
+		$query = $this->db->get()->num_rows();;
 		
 		$this->db->trans_complete(); 
 
 		if ($this->db->trans_status() === TRUE)
 		{
-		    return $query;
+			return $query;
 		}
 		else
 		{

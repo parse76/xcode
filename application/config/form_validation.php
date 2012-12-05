@@ -5,24 +5,24 @@ $config = array(
         array(
             'field' => 'username',
             'label' => 'Username',
-            'rules' => 'trim|required|min_length[4]|max_length[32]|xss_clean'
+            'rules' => 'trim|required|xss_clean'
         ),
         array(
             'field' => 'password',
             'label' => 'Password',
-            'rules' => 'trim|required|min_length[4]|max_length[32]|xss_clean'
+            'rules' => 'trim|required|xss_clean'
         )
     ),
     'register' => array(
         array(
             'field' => 'firstname',
             'label' => 'First Name',
-            'rules' => 'trim|required|max_length[32]|xss_clean'
+            'rules' => 'trim|required|max_length[35]|xss_clean'
         ),
         array(
             'field' => 'lastname',
             'label' => 'Last Name',
-            'rules' => 'trim|required|max_length[32]|xss_clean'
+            'rules' => 'trim|required|max_length[35]|xss_clean'
         ),
         array(
             'field' => 'email',
@@ -32,7 +32,7 @@ $config = array(
         array(
             'field' => 'username',
             'label' => 'Username',
-            'rules' => 'trim|required|min_length[4]|max_length[32]|xss_clean'
+            'rules' => 'trim|required|min_length[4]|max_length[15]|xss_clean'
         ),
         array(
             'field' => 'password',
