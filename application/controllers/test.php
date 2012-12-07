@@ -223,6 +223,19 @@ class Test extends CI_Controller
         $query      = "LOAD DATA INFILE 'backupFile' INTO TABLE $tableName";
         $result = mysql_query($query);
     }
+
+    public function testoma5()
+    {
+        $this->load->library('encrypt');
+
+        $msg = 'Thequickbrownfoxjumpsoverthelazydog';
+
+        $encrypted_string = $this->encrypt->encode($msg);
+
+        $encrypt_to_md5 = md5($encrypted_string);
+        
+        echo $encrypt_to_md5;
+    }
 }
 
 /* End of file test.php */

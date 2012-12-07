@@ -46,9 +46,16 @@ class Account extends CI_Controller
     public function register()
     {
         $this->load->library('recaptcha');
+        $this->load->library('encrypt');
 
         // Check if referred by third part accounts
         $authenticator = $this->session->flashdata('authenticator');
+        $authenticator_id = $this->session->flashdata('authenticator_id');
+
+        if ($this->account_model->third_party_login($authenticator, $authenticator_id))
+        {
+            echo 'REDIRECT TO PROFILE';
+        }
 
         if ($this->input->post())
         {
@@ -58,8 +65,19 @@ class Account extends CI_Controller
             if ($validator === TRUE && $response->is_valid)
             {
                 $register_data = array_slice($this->input->post(NULL, TRUE),0, 5);
+                $register_data[$authenticator] = $authenticator_id;
+                $register_data['password'] = md5($this->encrypt->encode($register_data['password']));
 
-                var_dump($register_data);
+                if ($this->account_model->register_user($register_data))
+                {
+                    redirect('home');    
+                }
+                else
+                {
+                    echo 'WARNING!';
+                }
+                
+                // var_dump($register_data);
                 // var_dump($this->input->post(NULL, TRUE));
             }
             else

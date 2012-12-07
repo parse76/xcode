@@ -23,21 +23,21 @@ class Account_model extends CI_Model
 		// }
 	}
 
-	public function register_user()
+	public function register_user($register_data = array())
 	{
 		$this->db->trans_start();
 
-		
+		$this->db->insert('users', $register_data);
 
 		$this->db->trans_complete();
 
 		if ($this->db->trans_status() === TRUE)
 		{
-			// asd
+			return TRUE;
 		}
 		else
 		{
-			// ddd
+			return FALSE;
 		}
 	}
 
@@ -55,7 +55,7 @@ class Account_model extends CI_Model
 
 		if ($this->db->trans_status() === TRUE)
 		{
-			return $query;
+			return ($query == 1 ? TRUE : FALSE);
 		}
 		else
 		{
