@@ -38,38 +38,22 @@
 |
 */
 
-$route['default_controller'] = 'page';
-$route['404_override'] = 'page/page_missing';
+$route['default_controller'] = 'home';
+$route['404_override'] = 'home/page_missing';
 
-// Page routes (Static Pages)
-$route['page'] = 'page/page_missing';
-$route['page/(:any)'] = 'page/page_missing';
-$route['home'] = 'page/index';
-$route['site_map'] = 'page/site_map';
-$route['about_us'] = 'page/about_us';
-$route['contact_us'] = 'page/contact_us';
-$route['login'] = 'page/login';
-$route['register'] = 'page/register';
-$route['logout'] = 'page/logout';
-$route['404'] = 'page/page_missing';
+// Home Routes (Static Pages)
+$route['home'] = 'home/index';
+$route['site_map'] = 'home/site_map';
+$route['about_us'] = 'home/about_us';
+$route['contact_us'] = 'home/contact_us';
 
-$route['account/(:any)'] = 'account/$1';
+// Account Routes
+$route['login'] = 'account/login';
+$route['register'] = 'account/register';
+$route['logout'] = 'account/logout';
+
+// Test Routes
 $route['test/(:any)'] = 'test/$1';
-
-// Validate routes
-$route['validate'] = 'page/page_missing';
-$route['validate/index'] = 'page/page_missing';
-$route['validate/(:any)'] = 'validate/$1';
-
-// Account routes
-// $route['account/(:any)'] = 'account/$1';
-// $route['account'] = 'page/page_missing';
-// $route['account/(:any)'] = 'page/page_missing';
-
-// Dynamic routes
-$route['(:any)/settings'] = 'account/settings';
-$route['(:any)'] = 'user/profile/$1';
-
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

@@ -9,6 +9,12 @@ class Account extends CI_Controller
         $this->load->model('account_model');
     }
 
+    public function index()
+    {
+        $data['page'] = 'account/account_view';
+        $this->load->view('template', $data);
+    }
+
     public function login()
     {
         if ($this->input->post())
@@ -38,7 +44,7 @@ class Account extends CI_Controller
         }
 
         $data['content'] = $params;
-        $data['page'] = 'login';
+        $data['page'] = 'account/login_view';
 
         $this->load->view('template', $data);
     }
@@ -133,7 +139,7 @@ class Account extends CI_Controller
         $params['recaptcha'] = $this->recaptcha->recaptcha_get_html();
 
         $data['content'] = $params;
-        $data['page'] = 'register_view';
+        $data['page'] = 'account/register_view';
 
         $this->load->view('template', $data);
     }

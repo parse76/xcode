@@ -17,18 +17,18 @@ if ($username) {
     $content['header_link'] = $username;
 } else {
     $content['header_name'] = '( Sign In! )';
-    $content['header_link'] = 'login';
+    $content['header_link'] = 'account';
 }
 
-$this->parser->parse('header', $content);
+$this->parser->parse('home/header_view', $content);
 
-$this->parser->parse('banner', $content);
+$this->parser->parse('home/banner_view', $content);
 
-$this->parser->parse('navbar', $content);
+$this->parser->parse('home/navbar_view', $content);
 
 $this->parser->parse($page, $content);
 
-$this->parser->parse('footer', $content);
+$this->parser->parse('home/footer_view', $content);
 
 /* End of file template.php */
 /* Location: ./application/views/template.php */
