@@ -39,7 +39,7 @@
 */
 
 $route['default_controller'] = 'home';
-$route['404_override'] = 'home/page_missing';
+$route['404_override'] = '';
 
 // Home Routes (Static Pages)
 $route['home'] = 'home/index';

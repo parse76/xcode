@@ -33,7 +33,7 @@ class Home extends CI_Controller
 
     public function page_missing()
     {
-        $this->load->view('page_missing');
+        $this->load->view('page_missing_view');
     }
 }
 

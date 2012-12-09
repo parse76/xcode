@@ -6,12 +6,18 @@ body {
     font-size: 13px;
 }
 
-.banner {
-    height: 120px;
+.navbar
+{
+    margin-bottom: 20px;
 }
 
-.header, .banner {
-    margin-bottom: 10px;
+.home-banner {
+    height: 100px;
+}
+
+.home-view > .top-brands, .home-banner
+{
+    margin-bottom: 20px;
 }
 
 .navbar .nav > li > p {
