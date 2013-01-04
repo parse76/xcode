@@ -236,6 +236,31 @@ class Test extends CI_Controller
         
         echo $encrypt_to_md5;
     }
+
+    public function testmail()
+    {
+        $this->load->library('email');
+        $this->email->set_newline("\r\n");
+        
+        $this->email->from('xcode.test.project@gmail.com', 'Xcode Project');
+        $this->email->to('bryan.estrito@gmail.com');     
+        $this->email->subject('Test Mail with attachment');     
+        $this->email->message('new msg');
+        
+        $path = $this->config->item('server_root');
+        $file = $path . '/xcode/attach/sample.txt';
+        
+        $this->email->attach($file);
+
+        if($this->email->send())
+        {
+            echo 'Your email was sent, fool. baka!';
+        }
+        else
+        {
+            show_error($this->email->print_debugger());
+        }
+    }
 }
 
 /* End of file test.php */

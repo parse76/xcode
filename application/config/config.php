@@ -358,5 +358,16 @@ $config['rewrite_short_tags'] = FALSE;
 $config['proxy_ips'] = '';
 
 
+/*
+|--------------------------------------------------------------------------
+| Just Added
+|--------------------------------------------------------------------------
+|
+| Seriously just added
+|
+*/
+$config['server_root'] = $_SERVER['DOCUMENT_ROOT'];
+
+
 /* End of file config.php */
 /* Location: ./application/config/config.php */
