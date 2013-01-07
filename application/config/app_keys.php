@@ -2,8 +2,8 @@
 
 $config = array(
     'facebook' => array(
-        'appId' => '277835292335638',
-        'secret' => 'd3368aba56f8af88697b24b3fea344c0',
+        'appId' => '242927229174494',
+        'secret' => '5e0c81a9c1e4c1bcc8c93933804949c3',
         'cookie' => true
     ),
     'twitter' => array(

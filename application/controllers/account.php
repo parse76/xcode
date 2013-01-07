@@ -76,7 +76,7 @@ class Account extends CI_Controller
 
                 if ($this->account_model->register_user($register_data))
                 {
-                    redirect('home');    
+                    redirect('home');
                 }
                 else
                 {
@@ -190,7 +190,7 @@ class Account extends CI_Controller
             //save the information inside the session
             $_SESSION['access_token'] = $access_token;
 
-            if ($this->account_model->third_party_login('facebook', $facebook_id) == 1)
+            if ($this->account_model->third_party_login('facebook', $facebook_id))
             {
                 echo "redirect to profile";
             }
@@ -270,7 +270,7 @@ class Account extends CI_Controller
             $gmail = $oauth2_response['email'];
             $oauth2_response['username'] = substr($gmail, 0, strpos($gmail, '@'));
             
-            if ($this->account_model->third_party_login('google', $google_id) == 1)
+            if ($this->account_model->third_party_login('google', $google_id))
             {
                 echo "redirect to profile";
             }
@@ -294,6 +294,8 @@ class Account extends CI_Controller
             redirect($this->google->createAuthUrl());
         }
     }
+
+
 
     public function logout()
     {

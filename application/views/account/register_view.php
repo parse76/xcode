@@ -36,7 +36,7 @@
                     <small>Lorem ipsum</small>
                 </h3>
             </div>
-            <form action="{base_url}validate/register" method="post" accept-charset="utf-8" class="form-horizontal">
+            <form action="{base_url}account/register" method="post" accept-charset="utf-8" class="form-horizontal">
                 <div class="control-group">
                     <label class="control-label" for="firstname">First Name:</label>
                     <div class="controls">
