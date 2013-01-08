@@ -53,6 +53,7 @@ class Account extends CI_Controller
     {
         $this->load->library('recaptcha');
         $this->load->library('encrypt');
+        $this->load->library('email');
 
         // Check if referred by third part accounts
         $authenticator = $this->session->flashdata('authenticator');
@@ -73,10 +74,36 @@ class Account extends CI_Controller
                 $register_data = array_slice($this->input->post(NULL, TRUE),0, 5);
                 $register_data[$authenticator] = $authenticator_id;
                 $register_data['password'] = md5($this->encrypt->encode($register_data['password']));
+                $register_data['token'] = sha1($this->encrypt->encode($register_data['username']));
+                $register_data['date_registered'] = date("Y-m-d H:i:s", time());
 
                 if ($this->account_model->register_user($register_data))
                 {
-                    redirect('home');
+                    // Send confirmation email
+                    $this->email->set_newline("\r\n");
+                    
+                    $this->email->from('xcode.test.project@gmail.com', 'Xcode Project');
+                    $this->email->to($register_data['email']);     
+                    $this->email->subject('Xcode Verify Registration');
+
+                    $token = $register_data['token'];
+
+                    $verify_segments = array('account', 'verify', $token);
+                    $verify_url = site_url($verify_segments);
+
+                    $msg = "Thank you and welcome to Xcode Test Project!\n\n";
+                    $msg .= "Please click the link to activate your account:\n".$verify_url;
+
+                    $this->email->message($msg);
+
+                    if($this->email->send())
+                    {
+                        echo 'Your email was sent, fool. baka!';
+                    }
+                    else
+                    {
+                        show_error($this->email->print_debugger());
+                    }
                 }
                 else
                 {
@@ -295,19 +322,43 @@ class Account extends CI_Controller
         }
     }
 
+    public function verify($token='')
+    {
+        if ($token)
+        {
+            if ($this->account_model->verify_token($token))
+            {
+                $user_data = array(
+                    'date_verified' => date("Y-m-d H:i:s", time())
+                );
 
+                if ($this->account_model->verify_date($user_data, $token));
+                {
+                    echo "YOHOHO REDIRECT TO PROFILE";
+                }
+            }
+            else
+            {
+                echo "WALA KAMING GANYANG TOKEN!";
+            }
+        }
+        else
+        {
+            redirect('home');
+        }
+    }
 
     public function logout()
     {
         // session_destroy();
 
-        $user_info = array(
+        $user_data = array(
             'username' => '',
             'authenticator' => '',
             'logged_in' => FALSE
         );
 
-        $this->session->unset_userdata($user_info);
+        $this->session->unset_userdata($user_data);
 
         redirect('home');
     }

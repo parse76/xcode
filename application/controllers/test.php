@@ -261,6 +261,19 @@ class Test extends CI_Controller
             show_error($this->email->print_debugger());
         }
     }
+
+    public function date()
+    {
+        // $this->load->model('test_model');
+
+        // $data['date'] = date('Y-m-d h:i:s', time());
+
+        // echo $data['date'];
+
+        // $this->test_model->insert_date($data);
+
+        echo date("Y-m-d H:i:s", time());
+    }
 }
 
 /* End of file test.php */

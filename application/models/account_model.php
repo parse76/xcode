@@ -23,7 +23,7 @@ class Account_model extends CI_Model
 		// }
 	}
 
-	public function register_user($register_data = array())
+	public function register_user($register_data=array())
 	{
 		$this->db->trans_start();
 
@@ -49,17 +49,56 @@ class Account_model extends CI_Model
 		$this->db->from('users');
 		$this->db->where($authenticator, $authenticator_id);
 		$this->db->limit(1);
-		$query = $this->db->get()->num_rows();;
 		
 		$this->db->trans_complete(); 
 
 		if ($this->db->trans_status() === TRUE)
 		{
-			return ($query == 1 ? TRUE : FALSE);
+			return $this->db->get()->num_rows();
 		}
 		else
 		{
 			// generate an error... or use the log_message() function to log your error
+			return FALSE;
+		}
+	}
+
+	public function verify_token($token='')
+	{
+		$this->db->trans_start();
+
+		$this->db->select('token');
+		$this->db->from('users');
+		$this->db->where('token', $token);
+		$this->db->limit(1);
+
+		$this->db->trans_complete();
+
+		if ($this->db->trans_status() === TRUE)
+		{
+			return $this->db->get()->num_rows();
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	public function verify_date($user_data=array(), $token='')
+	{
+		$this->db->trans_start();
+
+		$this->db->where('token', $token);
+		$this->db->update('users', $user_data);
+
+		$this->db->trans_complete();
+
+		if ($this->db->trans_status() === TRUE)
+		{
+			return TRUE;
+		}
+		else
+		{
 			return FALSE;
 		}
 	}
