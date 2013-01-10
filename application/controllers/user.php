@@ -8,32 +8,46 @@ class User extends CI_Controller
 		//Load Dependencies
 	}
 
-	// public function profile()
-	// {
-	// 	$value =  $this->uri->segment(1);
-
-	// 	$username = $this->session->userdata('username');
-	// 	$authenticator = $this->session->userdata('authenticator');
-	// 	$logged_in = $this->session->userdata('logged_in');
-
-	// 	if ($username == $value && $logged_in == true) {
-	// 		echo 'your profile';
-	// 	} else if ($username != $value && $logged_in === true) {
-	// 		echo 'not ur profile';
-	// 	} else {
-	// 		echo 'guest!';
-
-	// 		print_r($_COOKIE);
-	// 	}
-	// }
-
-	public function profile()
+	public function index($login_name='')
 	{
-		$data['page'] = 'user/profile_view';
+		$username = $this->session->userdata('username');
+		$authenticator = $this->session->userdata('authenticator');
+		$logged_in = $this->session->userdata('logged_in');
+
+		if ($username == $login_name && $logged_in === true)
+		{
+			$this->private_profile($username);
+		}
+		else if ($username != $login_name && $logged_in === true)
+		{
+			$this->protected_profile($username);
+		}
+		else
+		{
+			$this->public_profile($username);
+		}
+	}
+
+	public function private_profile($username='')
+	{
+		echo "Logged In, Your profile!";
+	}
+
+	public function protected_profile($username='')
+	{
+		echo "Logged In, Someone's profile!";
+	}
+
+	public function public_profile($username='')
+	{
+		// echo "Logged Out, Your profile or maybe someone's profile!";
+
+		$data['layout'] = 'profile';
+		$data['page'] = 'user/public_profile_view';
 		$this->load->view('template', $data);
 	}
 
-	public function account_settings()
+	public function settings()
 	{
 		echo 'TODO: Account settings';
 	}

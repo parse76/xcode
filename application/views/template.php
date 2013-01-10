@@ -20,15 +20,33 @@ if ($username) {
     $content['header_link'] = 'account';
 }
 
-$this->parser->parse('home/header_view', $content);
 
-$this->parser->parse('home/banner_view', $content);
+if ($layout === "default")
+{
 
-$this->parser->parse('home/navbar_view', $content);
+}
+else if ($layout === 'profile')
+{
+	$this->parser->parse('header', $content);
 
-$this->parser->parse($page, $content);
+	$this->parser->parse('home/header_view', $content);
 
-$this->parser->parse('home/footer_view', $content);
+	$this->parser->parse($page, $content);
+
+	$this->parser->parse('footer', $content);
+}
+
+
+
+// $this->parser->parse('home/header_view', $content);
+
+// $this->parser->parse('home/banner_view', $content);
+
+// $this->parser->parse('home/navbar_view', $content);
+
+// $this->parser->parse($page, $content);
+
+// $this->parser->parse('home/footer_view', $content);
 
 /* End of file template.php */
 /* Location: ./application/views/template.php */

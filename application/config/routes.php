@@ -55,5 +55,8 @@ $route['logout'] = 'account/logout';
 // Test Routes
 $route['test/(:any)'] = 'test/$1';
 
+// Profile route
+$route['(:any)'] = 'user/index/$1';
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

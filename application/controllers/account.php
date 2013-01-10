@@ -9,11 +9,11 @@ class Account extends CI_Controller
         $this->load->model('account_model');
     }
 
-    public function index()
-    {
-        $data['page'] = 'account/account_view';
-        $this->load->view('template', $data);
-    }
+    // public function index()
+    // {
+    //     $data['page'] = 'account/account_view';
+    //     $this->load->view('template', $data);
+    // }
 
     public function login()
     {
