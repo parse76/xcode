@@ -43,8 +43,15 @@ class Account extends CI_Controller
             $params['login_error'] = '';
         }
 
-        $data['content'] = $params;
-        $data['page'] = 'account/login_view';
+        // $data['content'] = $params;
+        // $data['layout'] = 'default';
+        // $data['page'] = 'account/login_view';
+
+        $data = array(
+            'content' => $params,
+            'layout' => 'default',
+            'page' => 'account/login_view'
+        );
 
         $this->load->view('template', $data);
     }
@@ -79,31 +86,11 @@ class Account extends CI_Controller
 
                 if ($this->account_model->register_user($register_data))
                 {
-                    // Send confirmation email
-                    $this->email->set_newline("\r\n");
-                    
-                    $this->email->from('xcode.test.project@gmail.com', 'Xcode Project');
-                    $this->email->to($register_data['email']);     
-                    $this->email->subject('Xcode Verify Registration');
+                    // Dont bother to check because it can make many request
+                    $this->confirm($register_data['email'], $register_data['token']);
 
-                    $token = $register_data['token'];
-
-                    $verify_segments = array('account', 'verify', $token);
-                    $verify_url = site_url($verify_segments);
-
-                    $msg = "Thank you and welcome to Xcode Test Project!\n\n";
-                    $msg .= "Please click the link to activate your account:\n".$verify_url;
-
-                    $this->email->message($msg);
-
-                    if($this->email->send())
-                    {
-                        echo 'Your email was sent, fool. baka!';
-                    }
-                    else
-                    {
-                        show_error($this->email->print_debugger());
-                    }
+                    // Since user can make a resend request
+                    $this->session->set_flashdata('email', $register_data['']);
                 }
                 else
                 {
@@ -322,6 +309,36 @@ class Account extends CI_Controller
         }
     }
 
+    public function confirm($email='', $token='')
+    {
+        // Send confirmation email
+        $this->email->set_newline("\r\n");
+        
+        $this->email->from('xcode.test.project@gmail.com', 'Xcode Project');
+        $this->email->to($email);     
+        $this->email->subject('Xcode Verify Registration');
+
+        $verify_segments = array('verify', $token);
+        $verify_url = site_url($verify_segments);
+
+        $msg = "Thank you and welcome to Xcode Test Project!\n\n";
+        $msg .= "Please click the link to activate your account:\n".$verify_url;
+
+        $this->email->message($msg);
+
+        $this->email->send();
+
+        // if($this->email->send())
+        // {
+        //     return TRUE;
+        // }
+        // else
+        // {
+        //     // show_error($this->email->print_debugger());
+        //     return FALSE;
+        // }
+    }
+
     public function verify($token='')
     {
         if ($token)
@@ -346,6 +363,20 @@ class Account extends CI_Controller
         {
             redirect('home');
         }
+    }
+
+    public function resend($email='', $token='')
+    {
+        if ($this->confirm($email, $token))
+        {
+            echo "resend succesful";
+        }
+        else
+        {
+            echo "resend again";
+        }
+
+
     }
 
     public function logout()

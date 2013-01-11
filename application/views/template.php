@@ -17,36 +17,32 @@ if ($username) {
     $content['header_link'] = $username;
 } else {
     $content['header_name'] = '( Sign In! )';
-    $content['header_link'] = 'account';
+    $content['header_link'] = 'login';
 }
 
 
-if ($layout === "default")
+if ($layout === 'default')
 {
-
+	$this->parser->parse('header', $content);
+	$this->parser->parse('main/header_view', $content);
+	$this->parser->parse('main/banner_view', $content);
+	$this->parser->parse('main/navbar_view', $content);
+	$this->parser->parse($page, $content);
+	$this->parser->parse('main/footer_view', $content);
+	$this->parser->parse('footer', $content);
 }
 else if ($layout === 'profile')
 {
 	$this->parser->parse('header', $content);
-
-	$this->parser->parse('home/header_view', $content);
-
 	$this->parser->parse($page, $content);
-
 	$this->parser->parse('footer', $content);
 }
-
-
-
-// $this->parser->parse('home/header_view', $content);
-
-// $this->parser->parse('home/banner_view', $content);
-
-// $this->parser->parse('home/navbar_view', $content);
-
-// $this->parser->parse($page, $content);
-
-// $this->parser->parse('home/footer_view', $content);
+else
+{
+	$this->parser->parse('header', $content);
+	$this->parser->parse($page, $content);
+	$this->parser->parse('footer', $content);
+}
 
 /* End of file template.php */
 /* Location: ./application/views/template.php */

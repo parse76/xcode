@@ -6,8 +6,8 @@
                     <a href="{base_url}home" class="brand active">Xcode</a>
                     <ul class="nav">
                         <li><a href="{base_url}site_map">Site Map</a></li>
-                        <li><a href="{base_url}about_us">About Us</a></li>
-                        <li><a href="{base_url}contact_us">Contact Us</a></li>
+                        <li><a href="{base_url}about">About Us</a></li>
+                        <li><a href="{base_url}contact">Contact Us</a></li>
                     </ul>
                     <ul class="nav pull-right">
                         <li><p>Welcome,</p></li>

@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Home extends CI_Controller
+class Main extends CI_Controller
 {
 	public function __construct()
 	{
@@ -9,25 +9,29 @@ class Home extends CI_Controller
 
 	public function index()
     {
-        $data['page'] = 'home/home_view';
+        $data['page'] = 'main/home_view';
+        $data['layout'] = 'default';
         $this->load->view('template', $data);
     }
 
-    public function about_us()
+    public function about()
     {
-        $data['page'] = 'home/about_us_view';
+        $data['page'] = 'main/about_view';
+        $data['layout'] = 'default';
         $this->load->view('template', $data);
     }
 
-    public function contact_us()
+    public function contact()
     {
-        $data['page'] = 'home/contact_us_view';
+        $data['page'] = 'main/contact_view';
+        $data['layout'] = 'default';
         $this->load->view('template', $data);
     }
 
     public function site_map()
     {
-        $data['page'] = 'home/site_map_view';
+        $data['page'] = 'main/site_map_view';
+        $data['layout'] = 'default';
         $this->load->view('template', $data);
     }
 
@@ -37,5 +41,5 @@ class Home extends CI_Controller
     }
 }
 
-/* End of file home.php */
-/* Location: ./application/controllers/home.php */
+/* End of file main.php */
+/* Location: ./application/controllers/main.php */

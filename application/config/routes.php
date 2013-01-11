@@ -38,22 +38,29 @@
 |
 */
 
-$route['default_controller'] = 'home';
+$route['default_controller'] = 'main';
 $route['404_override'] = '';
 
-// Home Routes (Static Pages)
-$route['home'] = 'home/index';
-$route['site_map'] = 'home/site_map';
-$route['about_us'] = 'home/about_us';
-$route['contact_us'] = 'home/contact_us';
+// Main Routes (Static Pages)
+$route['home'] = 'main/index';
+$route['about'] = 'main/about';
+$route['contact'] = 'main/contact';
+$route['site_map'] = 'main/site_map';
 
 // Account Routes
 $route['login'] = 'account/login';
 $route['register'] = 'account/register';
 $route['logout'] = 'account/logout';
+$route['facebook'] = 'account/facebook';
+$route['twitter'] = 'account/twitter';
+$route['google'] = 'account/google';
+$route['verify/(:any)'] = 'account/verify/$1';
+$route['resend'] = 'account/resend';
 
 // Test Routes
 $route['test/(:any)'] = 'test/$1';
+
+$route['test'] = 'test';
 
 // Profile route
 $route['(:any)'] = 'user/index/$1';

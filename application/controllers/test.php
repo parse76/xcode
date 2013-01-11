@@ -274,6 +274,13 @@ class Test extends CI_Controller
 
         echo date("Y-m-d H:i:s", time());
     }
+
+    public function arrtest()
+    {
+        $x['asd'] = 'asd';
+
+
+    }
 }
 
 /* End of file test.php */
