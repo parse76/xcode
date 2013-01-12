@@ -48,14 +48,14 @@ $route['contact'] = 'main/contact';
 $route['site_map'] = 'main/site_map';
 
 // Account Routes
-$route['login'] = 'account/login';
-$route['register'] = 'account/register';
-$route['logout'] = 'account/logout';
-$route['facebook'] = 'account/facebook';
-$route['twitter'] = 'account/twitter';
-$route['google'] = 'account/google';
-$route['verify/(:any)'] = 'account/verify/$1';
-$route['resend'] = 'account/resend';
+$route['login'] = 'account/user_login';
+$route['register'] = 'account/register_user';
+$route['logout'] = 'account/user_logout';
+$route['facebook'] = 'account/facebook_login';
+$route['twitter'] = 'account/twitter_login';
+$route['google'] = 'account/google_plus_login';
+$route['verify/(:any)'] = 'account/verify_token/$1';
+$route['resend'] = 'account/resend_email_confirmation';
 
 // Test Routes
 $route['test/(:any)'] = 'test/$1';

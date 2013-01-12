@@ -44,6 +44,13 @@ $config = array(
             'label' => 'Password Confirmation',
             'rules' => 'trim|required|matches[password]|xss_clean'
         )
+    ),
+    'email' => array(
+        array(
+            'field' => 'email',
+            'label' => 'Email Address',
+            'rules' => 'trim|required|valid_email|max_length[254]|xss_clean'
+        )
     )
 );
 

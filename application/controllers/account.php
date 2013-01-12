@@ -7,6 +7,10 @@ class Account extends CI_Controller
         parent::__construct();
 
         $this->load->model('account_model');
+
+        $this->load->library('recaptcha');
+        $this->load->library('encrypt');
+        $this->load->library('email');
     }
 
     // public function index()
@@ -15,7 +19,7 @@ class Account extends CI_Controller
     //     $this->load->view('template', $data);
     // }
 
-    public function login()
+    public function user_login()
     {
         if ($this->input->post())
         {
@@ -56,12 +60,8 @@ class Account extends CI_Controller
         $this->load->view('template', $data);
     }
 
-    public function register()
+    public function register_user()
     {
-        $this->load->library('recaptcha');
-        $this->load->library('encrypt');
-        $this->load->library('email');
-
         // Check if referred by third part accounts
         $authenticator = $this->session->flashdata('authenticator');
         $authenticator_id = $this->session->flashdata('authenticator_id');
@@ -86,15 +86,12 @@ class Account extends CI_Controller
 
                 if ($this->account_model->register_user($register_data))
                 {
-                    // Dont bother to check because it can make many request
-                    $this->confirm($register_data['email'], $register_data['token']);
-
-                    // Since user can make a resend request
-                    $this->session->set_flashdata('email', $register_data['']);
+                    // Send confirmation email
+                    $this->send_email_confirmation($register_data['email'], $register_data['token']);
                 }
                 else
                 {
-                    echo 'WARNING!';
+                    throw new Exception("Cannot register at the moment", 1);
                 }
                 
                 // var_dump($register_data);
@@ -102,7 +99,7 @@ class Account extends CI_Controller
             }
             else
             {
-                // Preserve authentication is register fails
+                // Preserve authentication if registration fails
                 if ($authenticator)
                 {
                     $this->session->keep_flashdata('authenticator');
@@ -158,7 +155,7 @@ class Account extends CI_Controller
         $this->load->view('template', $data);
     }
 
-    public function facebook()
+    public function facebook_login()
     {
         $this->load->library('facebook');
 
@@ -244,12 +241,12 @@ class Account extends CI_Controller
         }
     }
 
-    public function twitter()
+    public function twitter_login()
     {
         echo 'TODO: twitter connect app';
     }
 
-    public function google()
+    public function google_plus_login()
     {
         $this->load->library('google');
 
@@ -309,7 +306,7 @@ class Account extends CI_Controller
         }
     }
 
-    public function confirm($email='', $token='')
+    public function send_email_confirmation($email='', $token='')
     {
         // Send confirmation email
         $this->email->set_newline("\r\n");
@@ -339,7 +336,7 @@ class Account extends CI_Controller
         // }
     }
 
-    public function verify($token='')
+    public function verify_token($token='')
     {
         if ($token)
         {
@@ -349,7 +346,7 @@ class Account extends CI_Controller
                     'date_verified' => date("Y-m-d H:i:s", time())
                 );
 
-                if ($this->account_model->verify_date($user_data, $token));
+                if ($this->account_model->verify_date($token, $user_data));
                 {
                     echo "YOHOHO REDIRECT TO PROFILE";
                 }
@@ -365,21 +362,41 @@ class Account extends CI_Controller
         }
     }
 
-    public function resend($email='', $token='')
+    public function resend_email_confirmation($email='')
     {
-        if ($this->confirm($email, $token))
+        if (!$email) {
+            throw new Exception("No validated email", 1);
+        }
+
+        if ($this->form_validation->run('email'))
         {
-            echo "resend succesful";
+            $username = $this->account_model->get_username($email);
+
+            if ($username)
+            {
+                $token = sha1($this->encrypt->encode($username));
+
+                $user_data = array(
+                    'token' => $token
+                );
+
+                if ($this->account_model->update_token($email, $user_data))
+                {
+                    echo "token updated";
+                }
+                else
+                {
+                    throw new Exception("Fail resending", 1);
+                }
+            }
         }
         else
         {
-            echo "resend again";
+            throw new Exception("Invalid Email", 1);
         }
-
-
     }
 
-    public function logout()
+    public function user_logout()
     {
         // session_destroy();
 
