@@ -66,10 +66,10 @@ class Account extends CI_Controller
         $authenticator = $this->session->flashdata('authenticator');
         $authenticator_id = $this->session->flashdata('authenticator_id');
 
-        if ($this->account_model->third_party_login($authenticator, $authenticator_id))
-        {
-            echo 'REDIRECT TO PROFILE';
-        }
+        // if ($this->account_model->third_party_login($authenticator, $authenticator_id))
+        // {
+        //     echo 'REDIRECT TO PROFILE';
+        // }
 
         if ($this->input->post())
         {
@@ -79,7 +79,12 @@ class Account extends CI_Controller
             if ($validator === TRUE && $response->is_valid)
             {
                 $register_data = array_slice($this->input->post(NULL, TRUE),0, 5);
-                $register_data[$authenticator] = $authenticator_id;
+                
+                if ($authenticator && $authenticator_id)
+                {
+                    $register_data[$authenticator] = $authenticator_id;
+                }
+
                 $register_data['password'] = md5($this->encrypt->encode($register_data['password']));
                 $register_data['token'] = sha1($this->encrypt->encode($register_data['username']));
                 $register_data['date_registered'] = date("Y-m-d H:i:s", time());
@@ -88,6 +93,12 @@ class Account extends CI_Controller
                 {
                     // Send confirmation email
                     $this->send_email_confirmation($register_data['email'], $register_data['token']);
+
+                    $data['content'] = $params;
+                    $data['layout'] = 'default';
+                    $data['page'] = 'account/register_view';
+
+                    $this->load->view('template', $data);
                 }
                 else
                 {
@@ -150,6 +161,7 @@ class Account extends CI_Controller
         $params['recaptcha'] = $this->recaptcha->recaptcha_get_html();
 
         $data['content'] = $params;
+        $data['layout'] = 'default';
         $data['page'] = 'account/register_view';
 
         $this->load->view('template', $data);
@@ -346,7 +358,7 @@ class Account extends CI_Controller
                     'date_verified' => date("Y-m-d H:i:s", time())
                 );
 
-                if ($this->account_model->verify_date($token, $user_data));
+                if ($this->account_model->update_verified_date($token, $user_data));
                 {
                     echo "YOHOHO REDIRECT TO PROFILE";
                 }
@@ -364,36 +376,53 @@ class Account extends CI_Controller
 
     public function resend_email_confirmation($email='')
     {
-        if (!$email) {
-            throw new Exception("No validated email", 1);
-        }
-
-        if ($this->form_validation->run('email'))
+        if ($this->input->post())
         {
-            $username = $this->account_model->get_username($email);
-
-            if ($username)
+            if ($this->form_validation->run('email'))
             {
-                $token = sha1($this->encrypt->encode($username));
+                $email = $this->input->post('email');
 
-                $user_data = array(
-                    'token' => $token
-                );
+                $username = $this->account_model->get_username($email);
 
-                if ($this->account_model->update_token($email, $user_data))
-                {
-                    echo "token updated";
-                }
-                else
-                {
-                    throw new Exception("Fail resending", 1);
-                }
+                var_dump($username);
+
+                // if ($username)
+                // {
+                //     $token = sha1($this->encrypt->encode($username));
+
+                //     $user_data = array(
+                //         'token' => $token
+                //     );
+
+                //     if ($this->account_model->update_token($email, $user_data))
+                //     {
+                //         echo "token updated";
+                //     }
+                //     else
+                //     {
+                //         throw new Exception("Fail resending", 1);
+                //     }
+                // }
+
+                $params = array();
+            }
+            else
+            {
+                throw new Exception("Invalid Email", 1);
             }
         }
         else
         {
-            throw new Exception("Invalid Email", 1);
+            $params['email'] = '';
+
+            $params['email_error'] = form_error('email');
         }
+
+        $data['content'] = $params;
+        $data['layout'] = 'default';
+        $data['page'] = 'account/resend_view.php';
+
+        $this->load->view('template', $data);
     }
 
     public function user_logout()

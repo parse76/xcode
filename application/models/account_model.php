@@ -84,51 +84,51 @@ class Account_model extends CI_Model
 		}
 	}
 
-	public function verify_date($token='', $user_data=array())
+	public function update_verified_date($token='', $user_data=array())
 	{
-		$this->db->trans_start();
+		// $this->db->trans_start();
 
 		$this->db->where('token', $token);
 		$this->db->update('users', $user_data);
 
-		$this->db->trans_complete();
+		// $this->db->trans_complete();
 
-		if ($this->db->trans_status() === TRUE)
-		{
-			return TRUE;
-		}
-		else
-		{
-			return FALSE;
-		}
+		// if ($this->db->trans_status() === TRUE)
+		// {
+		// 	return TRUE;
+		// }
+		// else
+		// {
+		// 	return FALSE;
+		// }
 	}
 
 	public function get_username($email='')
 	{
-		$this->db->trans_start();
+		// $this->db->trans_start();
 
 		$this->db->select('username');
 		$this->db->from('users');
 		$this->db->where('email', $email);
 		$this->db->limit(1);
 
-		$this->db->trans_complete();
+		// $this->db->trans_complete();
 
-		if ($this->db->trans_status() === TRUE)
-		{
-			if ($this->db->get()->num_rows() > 0)
-			{
-				return $this->db->get();	
-			}
-			else
-			{
-				return FALSE;
-			}
-		}
-		else
-		{
-			return FALSE;
-		}
+		// if ($this->db->trans_status() === TRUE)
+		// {
+		// 	if ($this->db->get()->num_rows() > 0)
+		// 	{
+				return $this->db->get();
+		// 	}
+		// 	else
+		// 	{
+		// 		return FALSE;
+		// 	}
+		// }
+		// else
+		// {
+		// 	return FALSE;
+		// }
 	}
 
 	public function update_token($email='', $user_data=array())
