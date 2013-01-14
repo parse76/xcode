@@ -11,6 +11,7 @@ class Account extends CI_Controller
         $this->load->library('recaptcha');
         $this->load->library('encrypt');
         $this->load->library('email');
+        $this->load->helper('date');
     }
 
     // public function index()
@@ -376,50 +377,52 @@ class Account extends CI_Controller
 
     public function resend_email_confirmation($email='')
     {
-        if ($this->input->post())
+        if ($this->form_validation->run('email'))
         {
-            if ($this->form_validation->run('email'))
+            $email = $this->input->post('email');
+
+            $query_data = $this->account_model->get_username($email);
+
+            if ($query_data)
             {
-                $email = $this->input->post('email');
+                $username = $query_data['username'];
+                $date_validated = $query_data['date_verified'];
+                $token_data['token'] = sha1($this->encrypt->encode($username));
 
-                $username = $this->account_model->get_username($email);
+                // Account hasn't been validated
+                if (!validate_datetime($date_validated))
+                {
+                    if ($this->account_model->update_token($email, $token_data))
+                    {
+                        $this->send_email_confirmation($email, $token);
 
-                var_dump($username);
-
-                // if ($username)
-                // {
-                //     $token = sha1($this->encrypt->encode($username));
-
-                //     $user_data = array(
-                //         'token' => $token
-                //     );
-
-                //     if ($this->account_model->update_token($email, $user_data))
-                //     {
-                //         echo "token updated";
-                //     }
-                //     else
-                //     {
-                //         throw new Exception("Fail resending", 1);
-                //     }
-                // }
-
-                $params = array();
+                        echo "resend sent";
+                    }
+                    else
+                    {
+                        throw new Exception("Fail resending", 1);
+                    }    
+                }
+                else
+                {
+                    $params['email'] = set_value('email');
+                    $params['email_error'] = "Account is already validated.";
+                }
             }
             else
             {
-                throw new Exception("Invalid Email", 1);
+                $params['email'] = set_value('email');       
+                $params['email_error'] = "Email Address is not affiliated with Xcode";
             }
         }
         else
         {
-            $params['email'] = '';
-
+            $params['email'] = set_value('email');
             $params['email_error'] = form_error('email');
         }
 
         $data['content'] = $params;
-        $data['layout'] = 'default';
+        $data['layout'] = 'none';
         $data['page'] = 'account/resend_view.php';
 
         $this->load->view('template', $data);

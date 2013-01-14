@@ -105,38 +105,27 @@ class Account_model extends CI_Model
 
 	public function get_username($email='')
 	{
-		// $this->db->trans_start();
-
-		$this->db->select('username');
+		$this->db->select('username, date_verified');
 		$this->db->from('users');
 		$this->db->where('email', $email);
 		$this->db->limit(1);
 
-		// $this->db->trans_complete();
+		$query = $this->db->get();
 
-		// if ($this->db->trans_status() === TRUE)
-		// {
-		// 	if ($this->db->get()->num_rows() > 0)
-		// 	{
-				return $this->db->get();
-		// 	}
-		// 	else
-		// 	{
-		// 		return FALSE;
-		// 	}
-		// }
-		// else
-		// {
-		// 	return FALSE;
-		// }
+		if ($query->num_rows() > 0)
+		{
+			return $query->row_array();
+		}
+		
+		return FALSE;
 	}
 
-	public function update_token($email='', $user_data=array())
+	public function update_token($email='', $token_data=array())
 	{
 		$this->db->trans_start();
 
 		$this->db->where('email', $email);
-		$this->db->update('users', $user_data);
+		$this->db->update('users', $token_data);
 
 		$this->db->trans_complete();
 

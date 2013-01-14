@@ -37,7 +37,7 @@ else if ($layout === 'profile')
 	$this->parser->parse($page, $content);
 	$this->parser->parse('footer', $content);
 }
-else
+else if ($layout === 'none')
 {
 	$this->parser->parse('header', $content);
 	$this->parser->parse($page, $content);

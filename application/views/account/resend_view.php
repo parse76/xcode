@@ -8,7 +8,7 @@
     </div>
     <div class="control-group">
         <div class="controls">
-            <button type="submit" class="btn btn-large btn-primary">Create My Account</button>
+            <button type="submit" class="btn btn-small btn-primary">Resend Verification</button>
         </div>
     </div>
 </form>
