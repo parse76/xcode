@@ -48,15 +48,22 @@ class Account extends CI_Controller
             $params['login_error'] = '';
         }
 
+        // Option 1
         // $data['content'] = $params;
         // $data['layout'] = 'default';
         // $data['page'] = 'account/login_view';
 
-        $data = array(
-            'content' => $params,
-            'layout' => 'default',
-            'page' => 'account/login_view'
-        );
+        // Option 2
+        // $data = array(
+        //     'content' => $params,
+        //     'layout' => 'default',
+        //     'page' => 'account/login_view'
+        // );
+
+        // Option 3
+        $data->content = $params;
+        $data->layout = 'default';
+        $data->page = 'account/login_view';
 
         $this->load->view('template', $data);
     }
@@ -351,6 +358,20 @@ class Account extends CI_Controller
 
     public function verify_token($token='')
     {
+        $token_rule = array(
+            array(
+                'field' => 'token',
+                'label' => 'Token',
+                'rules' => 'trim|required|min_length[40]|max_length[40]|xss_clean'
+            )
+        );
+
+        $this->form_validation->set_verifier($token_rule);
+
+        var_dump($this->form_validation->verify());
+
+        exit();
+
         if ($token)
         {
             if ($this->account_model->verify_token($token))

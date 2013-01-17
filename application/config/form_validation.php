@@ -27,12 +27,12 @@ $config = array(
         array(
             'field' => 'email',
             'label' => 'Email Address',
-            'rules' => 'trim|required|valid_email|max_length[254]|xss_clean'
+            'rules' => 'trim|required|valid_email|is_unique[users.username]|max_length[254]|xss_clean'
         ),
         array(
             'field' => 'username',
             'label' => 'Username',
-            'rules' => 'trim|required|min_length[4]|max_length[15]|xss_clean'
+            'rules' => 'trim|required|is_unique[users.email]|min_length[4]|max_length[15]|xss_clean'
         ),
         array(
             'field' => 'password',

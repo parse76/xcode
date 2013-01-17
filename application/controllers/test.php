@@ -44,7 +44,7 @@ class Test extends CI_Controller
 
     public function parsing()
     {
-        $data = array(
+        $content = array(
             'blog_entries' => array(
                 array('title' => 'Title 1', 'body' => 'Body 1'),
                 array('title' => 'Title 2', 'body' => 'Body 2'),
@@ -54,10 +54,15 @@ class Test extends CI_Controller
             )
         );
 
-        $data2 = array('data' => $data);
-        $data2['page'] = 'test_view';
+        // $content = (object) $content;
 
-        $this->load->view('template', $data2);
+        $data['content'] = $content;
+        $data['page'] = 'test_view';
+        $data['layout'] = 'none';
+
+        $data = (object) $data;
+
+        $this->load->view('template', $data);
     }
 
     public function contest()
@@ -280,6 +285,35 @@ class Test extends CI_Controller
         $x['asd'] = 'asd';
 
 
+    }
+
+    public function reduce_array($array, $keys, $i = 0)
+    {
+        if (is_array($array))
+        {
+            if (isset($keys[$i]))
+            {
+                if (isset($array[$keys[$i]]))
+                {
+                    $array = $this->_reduce_array($array[$keys[$i]], $keys, ($i+1));
+                }
+                else
+                {
+                    return NULL;
+                }
+            }
+            else
+            {
+                return $array;
+            }
+        }
+
+        return $array;
+    }
+
+    public function throwkey()
+    {
+        echo $this->reduce_array();
     }
 }
 

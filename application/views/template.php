@@ -44,5 +44,7 @@ else if ($layout === 'none')
 	$this->parser->parse('footer', $content);
 }
 
+var_dump($content);
+
 /* End of file template.php */
 /* Location: ./application/views/template.php */
