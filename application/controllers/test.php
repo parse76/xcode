@@ -310,11 +310,6 @@ class Test extends CI_Controller
 
         return $array;
     }
-
-    public function throwkey()
-    {
-        echo $this->reduce_array();
-    }
 }
 
 /* End of file test.php */

@@ -358,19 +358,13 @@ class Account extends CI_Controller
 
     public function verify_token($token='')
     {
-        $token_rule = array(
-            array(
-                'field' => 'token',
-                'label' => 'Token',
-                'rules' => 'trim|required|min_length[40]|max_length[40]|xss_clean'
-            )
-        );
+        $x = array('1a', '202');
 
-        $this->form_validation->set_verifier($token_rule);
-
-        var_dump($this->form_validation->verify());
-
-        exit();
+        if( !$this->form_validation->validate($x, 'Token', 'required|numeric|less_than[100]') )
+        {
+            // echo 'Less than 100 please!!';
+            echo my_form_error('var');
+        }
 
         if ($token)
         {
