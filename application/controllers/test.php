@@ -310,6 +310,20 @@ class Test extends CI_Controller
 
         return $array;
     }
+
+    public function newsomething()
+    {
+        $date = '1991-04-22';
+
+        if ($this->form_validation->valid_date($date))
+        {
+            echo "good";
+        }
+        else
+        {
+            echo "bad";
+        }
+    }
 }
 
 /* End of file test.php */

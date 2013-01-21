@@ -8,69 +8,75 @@ class MY_Form_validation extends CI_Form_validation
     }
 
     /**
-     * Executes the Validation routines on a var instead of _POST
+     * Executes the Validation routines on normal Variables
      *
-     * @access    public
-     * @param    mixed        Single value or array of values to validate.
-     * @param    string        String of cascading rules.
-     * @param    function    Callback function with error string as parameter.
-     * @return    boolean        True on success, false on fail.
+     * @access   public
+     * @param    mixed      Single value or array of values to validate.
+     * @param    string     field/label/name for warning message.
+     * @param    string     String of cascading rules.
+     * @param    function   Callback function with error string as parameter.
+     * @return   boolean    True on success, false on fail.
      */
-    public function validate($var, $label = '', $rules = '', $callback = NULL)
+    public function validate($var, $field='', $rules = '', $callback = NULL)
     {
         // Load the language file containing error messages
         $this->CI->lang->load('form_validation');
-    
-        // Let's fake the required variables
-        $is_array = FALSE;
-        if(is_array($var))
+
+        // Main parameter gone? nah...
+        if (!isset($var))
         {
-            // If an array was passed via the first parameter instead of indidual string
-			// values we cycle through it and recursively call this function.
-			// if (is_array($var))
-			// {
-			// 	foreach ($var as $row)
-			// 	{
-			// 		// Houston, we have a problem...
-			// 		if ( ! isset($row['field']) OR ! isset($row['rules']))
-			// 		{
-			// 			continue;
-			// 		}
-
-			// 		// If the field label wasn't passed we use the field name
-			// 		$label = ( ! isset($row['label'])) ? $row['field'] : $row['label'];
-
-			// 		// Here we go!
-			// 		$this->validate($row['field'], $label, $row['rules']);
-			// 	}
-			// 	return $this;
-			// }
-
-			$is_array = TRUE;
+            return FALSE;
         }
 
-        $label = ($label == '') ? 'Data' : $label;
+        if (is_array($var))
+        {
+            // If array but blank..
+            if (count($var) == 0)
+            {
+                return FALSE;
+            }
+
+            // Do recursive call..
+            foreach ($var as $val)
+            {
+                // Houston, we have a problem...
+                if (!isset($val['var']) || !isset($val['field']) || !isset($val['rules']))
+                {
+                    continue;
+                }
+
+                $this->validate($val['var'], $val['field'], $val['rules']);
+            }
+        }
+        else
+        {
+            // If not an array but with empty parameters..
+            if ($field == '' || $rules == '')
+            {
+                return FALSE;
+            }
+        }
         
         $row = array(
-        	'field' => 'var',
-        	'label' => $label,
+        	'field' => $field,
+        	'label' => ucfirst($field),
         	'rules' => $rules,
-        	'is_array' => $is_array,
+        	'is_array' => FALSE,
         	'keys' => array(),
         	'postdata' => NULL,
         	'error' => ''
         );                
         
-        $this->_field_data['var']['postdata'] = $var;
+        $this->_field_data[$field]['postdata'] = $var;
         
         // Test for errors exactly like run() does...
-        $this->_execute($row, explode('|', $row['rules']), $this->_field_data['var']['postdata']);
+        $this->_execute($row, explode('|', $row['rules']), $this->_field_data[$field]['postdata']);
         
         // We have an error!
-        if (isset($this->_field_data['var']['error']))
+        if (isset($this->_field_data[$field]['error']))
         {
             // Slightly reformat the default error messages
-            $error = ucfirst(str_replace('field' , 'variable' ,  $this->_field_data['var']['error']));
+            $error = ucfirst(str_replace('field' , 'variable' ,  $this->_field_data[$field]['error']));
             
             // Callback func
             if (is_callable($callback))
@@ -81,7 +87,64 @@ class MY_Form_validation extends CI_Form_validation
             return FALSE;
         }
 
-        return TRUE;
+        // Did we end up with any errors?
+        $total_errors = count($this->_error_array);
+
+        // No errors, validation passes!
+        if ($total_errors == 0)
+        {
+            return TRUE;
+        }
+
+        // Validation fails
+        return FALSE;
+    }
+
+    /**
+     * Validate Date
+     *
+     * Check if a valid Date
+     *
+     * @access  public
+     * @param   string  date
+     * @return  boolean
+     */
+    public function valid_date($date='')
+    {
+        list($year, $month, $day) = explode("-", $date); 
+        
+        if (is_numeric($year) && is_numeric($month) && is_numeric($day)) 
+        {
+            if (checkdate($month, $day, $year))
+            {
+                return TRUE;
+            }
+        }
+
+        $this->set_message('valid_date', 'The %s field is not a valid date.');
+        
+        return FALSE;
+    }
+
+    /**
+     * Validate Datetime
+     *
+     * Check if a valid Datetime
+     *
+     * @access  public
+     * @param   string  datetime
+     * @return  boolean
+     */
+    public function valid_datetime($datetime='')
+    {
+        if (date('Y-m-d H:i:s', strtotime($datetime)) == $datetime)
+        {
+            return TRUE;
+        }
+
+        $this->set_message('valid_datetime', 'The %s field is not a valid datetime.');
+
+        return FALSE;
     }
 
 //     public function valid_date()

@@ -14,18 +14,18 @@
  * @param	string
  * @return	string
  */
-if ( ! function_exists('my_form_error'))
+if ( ! function_exists('var_error'))
 {
-	function my_form_error($field = '', $prefix = '', $suffix = '')
+	function var_error($field = '', $prefix = '', $suffix = '')
 	{
 		if (FALSE === ($OBJ =& _get_validation_object()))
 		{
 			return '';
 		}
 
-		$my_error = str_replace('field', 'variable', $OBJ->error($field, $prefix, $suffix));
+		$var_error = str_replace('field', 'variable', $OBJ->error($field, $prefix, $suffix));
 
-		return $my_error;
+		return $var_error;
 	}
 }
 

@@ -11,7 +11,6 @@ class Account extends CI_Controller
         $this->load->library('recaptcha');
         $this->load->library('encrypt');
         $this->load->library('email');
-        $this->load->helper('date');
     }
 
     // public function index()
@@ -358,15 +357,7 @@ class Account extends CI_Controller
 
     public function verify_token($token='')
     {
-        $x = array('1a', '202');
-
-        if( !$this->form_validation->validate($x, 'Token', 'required|numeric|less_than[100]') )
-        {
-            // echo 'Less than 100 please!!';
-            echo my_form_error('var');
-        }
-
-        if ($token)
+        if ($this->form_validation->validate($token, 'token', 'required|exact_length[40]|alpha_numeric'))
         {
             if ($this->account_model->verify_token($token))
             {
@@ -381,13 +372,20 @@ class Account extends CI_Controller
             }
             else
             {
-                echo "WALA KAMING GANYANG TOKEN!";
+                $params['token_error'] = "Invalid token.";
             }
         }
         else
         {
-            redirect('home');
+            $params['token_error'] = var_error('token');
         }
+        
+
+        $data->content = $params;
+        $data->layout = 'none';
+        $data->page = 'account/verify_view';
+
+        $this->load->view('template', $data);
     }
 
     public function resend_email_confirmation($email='')
@@ -405,7 +403,7 @@ class Account extends CI_Controller
                 $token_data['token'] = sha1($this->encrypt->encode($username));
 
                 // Account hasn't been validated
-                if (!validate_datetime($date_validated))
+                if (!$this->form_validation->valid_datetime($date_validated))
                 {
                     if ($this->account_model->update_token($email, $token_data))
                     {
