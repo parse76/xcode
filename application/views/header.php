@@ -14,6 +14,7 @@
     <meta name="author" content="brynzky" />
     
     <link href="{base_url}css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="{base_url}css/bootswatch-united.min.css" rel="stylesheet" type="text/css" />
     <link href="{base_url}css/main.css" rel="stylesheet" type="text/css" />
     <script src="{base_url}js/modernizr-2.6.1-respond-1.1.0.min.js" type="text/javascript"></script>
 

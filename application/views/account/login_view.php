@@ -8,7 +8,7 @@
                 <div class="control-group">
                     <label class="control-label" for="username">Username:</label>
                     <div class="controls">
-                        <input type="text" name="username" id="username" placeholder="Username">
+                        <input type="text" name="username" id="username" placeholder="Username" value="{username}">
                     </div>
                 </div>
                 <div class="control-group">
@@ -16,6 +16,9 @@
                     <div class="controls">
                         <input type="password" name="password" id="password" placeholder="Password">
                     </div>
+                </div>
+                <div class="alert alert-error login_error">
+                    {login_error}
                 </div>
                 <div class="control-group">
                     <div class="controls">

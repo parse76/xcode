@@ -15,7 +15,25 @@ class Account extends CI_Controller
 
     // public function index()
     // {
-    //     $data['page'] = 'account/account_view';
+    //     // Option for loading the data
+
+    //     // Option 1
+    //     $data['content'] = $params;
+    //     $data['layout'] = 'none';
+    //     $data['page'] = 'account/login_view';
+
+    //     // Option 2
+    //     $data = array(
+    //         'content' => $params,
+    //         'layout' => 'none',
+    //         'page' => 'account/login_view'
+    //     );
+
+    //     // Option 3
+    //     $data->content = $params;
+    //     $data->layout = 'none';
+    //     $data->page = 'account/login_view';
+
     //     $this->load->view('template', $data);
     // }
 
@@ -23,17 +41,21 @@ class Account extends CI_Controller
     {
         if ($this->input->post())
         {
-            if ($this->form_validation->run('login') === TRUE)
-            {
-                // Database validation here
+            $username = $this->input->post('username');
+            $password = $this->input->post('password');
 
+            $form_validation = $this->form_validation->run('login');
+            $database_validation = $this->account_model->user_login($username, $password);
+
+            if ($form_validation === TRUE && $database_validation)
+            {
                 $login_data['username'] = $this->input->post('username');
                 $login_data['authenticator'] = 'default';
                 $login_data['logged_in'] = TRUE;
 
                 $this->session->set_userdata($login_data);
 
-                redirect('home');
+                echo "GOOD";
             }
             else
             {
@@ -61,7 +83,7 @@ class Account extends CI_Controller
 
         // Option 3
         $data->content = $params;
-        $data->layout = 'default';
+        $data->layout = 'none';
         $data->page = 'account/login_view';
 
         $this->load->view('template', $data);

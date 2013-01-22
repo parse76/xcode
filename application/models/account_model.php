@@ -41,6 +41,25 @@ class Account_model extends CI_Model
 		}
 	}
 
+	public function user_login($username, $password)
+	{
+		
+		$this->db->select('id');
+		$this->db->from('users');
+		$this->db->where('username', $username);
+		$this->db->where('password', $password);
+		$this->db->limit(1);
+
+		$query = $this->db->get();
+
+		if ($query->num_rows() > 0)
+		{
+			return $query->row_array();
+		}
+
+		return FALSE;
+	}
+
 	public function third_party_login($authenticator, $authenticator_id)
 	{
 		$this->db->trans_start();
