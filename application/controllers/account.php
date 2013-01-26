@@ -69,22 +69,9 @@ class Account extends CI_Controller
             $params['login_error'] = '';
         }
 
-        // Option 1
-        // $data['content'] = $params;
-        // $data['layout'] = 'default';
-        // $data['page'] = 'account/login_view';
-
-        // Option 2
-        // $data = array(
-        //     'content' => $params,
-        //     'layout' => 'default',
-        //     'page' => 'account/login_view'
-        // );
-
-        // Option 3
-        $data->content = $params;
-        $data->layout = 'none';
-        $data->page = 'account/login_view';
+        $data['content'] = $params;
+        $data['layout'] = 'none';
+        $data['page'] = 'account/login_view';
 
         $this->load->view('template', $data);
     }
