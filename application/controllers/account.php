@@ -41,6 +41,10 @@ class Account extends CI_Controller
     {
         if ($this->input->post())
         {
+
+            var_dump($this->form_validation->run('login'));
+            exit();
+
             $username = $this->input->post('username');
             $password = $this->input->post('password');
 
