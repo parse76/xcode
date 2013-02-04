@@ -11,6 +11,7 @@ class Account extends CI_Controller
         $this->load->library('recaptcha');
         $this->load->library('encrypt');
         $this->load->library('email');
+        $this->load->library('template');
     }
 
     // public function index()
@@ -37,47 +38,104 @@ class Account extends CI_Controller
     //     $this->load->view('template', $data);
     // }
 
+    // public function user_login()
+    // {
+    //     if ($this->input->post())
+    //     {
+
+    //         var_dump($this->form_validation->run('login'));
+    //         exit();
+
+    //         $username = $this->input->post('username');
+    //         $password = $this->input->post('password');
+
+    //         $form_validation = $this->form_validation->run('login');
+    //         $database_validation = $this->account_model->user_login($username, $password);
+
+    //         if ($form_validation === TRUE && $database_validation)
+    //         {
+    //             $login_data['username'] = $this->input->post('username');
+    //             $login_data['authenticator'] = 'default';
+    //             $login_data['logged_in'] = TRUE;
+
+    //             $this->session->set_userdata($login_data);
+
+    //             echo "GOOD";
+    //         }
+    //         else
+    //         {
+    //             $params['username'] = $this->input->post('username');
+    //             $params['login_error'] = 'Either Username or Password is incorrect';
+    //         }
+    //     }
+    //     else
+    //     {
+    //         $params['username'] = '';
+    //         $params['login_error'] = '';
+    //     }
+
+    //     $data['content'] = $params;
+    //     $data['layout'] = 'none';
+    //     $data['page'] = 'account/login_view';
+
+    //     $this->load->view('template', $data);
+    // }
+
     public function user_login()
     {
-        if ($this->input->post())
+        try
         {
-
-            var_dump($this->form_validation->run('login'));
-            exit();
-
-            $username = $this->input->post('username');
-            $password = $this->input->post('password');
-
-            $form_validation = $this->form_validation->run('login');
-            $database_validation = $this->account_model->user_login($username, $password);
-
-            if ($form_validation === TRUE && $database_validation)
+            if (!$this->input->post())
             {
-                $login_data['username'] = $this->input->post('username');
-                $login_data['authenticator'] = 'default';
-                $login_data['logged_in'] = TRUE;
-
-                $this->session->set_userdata($login_data);
-
-                echo "GOOD";
+                $params['username'] = null;
+                $params['login_error'] = null;
             }
             else
             {
-                $params['username'] = $this->input->post('username');
-                $params['login_error'] = 'Either Username or Password is incorrect';
+                redirect($this->_check_user_login());    
             }
         }
-        else
+        catch (Exception $e)
         {
-            $params['username'] = '';
-            $params['login_error'] = '';
+            // What ever the catch, return this as an error message
+            $params['username'] = $this->input->post('username');
+            $params['login_error'] = "Either Username or Password is incorrect";
         }
 
-        $data['content'] = $params;
-        $data['layout'] = 'none';
-        $data['page'] = 'account/login_view';
+        $data = array(
+            'content' => $params,
+            'layout' => "none",
+            'page' => "account/login_view"
+        );
 
-        $this->load->view('template', $data);
+        $this->template->load($data);
+    }
+
+    private function _check_user_login()
+    {
+        if (!$this->form_validation->run('login'))
+        {
+            throw new Exception("Validation failed.");
+        }
+
+        $username = $this->input->post('username');
+        $password = $this->input->post('password');
+        $database_validation = $this->account_model->user_login($username, $password);
+
+        if (!$database_validation)
+        {
+            throw new Exception("Record not found.");
+        }
+
+        $login_data = array(
+            'user_id' => $database_validation->id,
+            'authenticator' => "default",
+            'logged_in' => TRUE
+        );
+
+        $this->session->set_userdata($login_data);
+
+        return $database_validation->username;
     }
 
     public function register_user()

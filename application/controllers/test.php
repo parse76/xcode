@@ -324,6 +324,42 @@ class Test extends CI_Controller
             echo "bad";
         }
     }
+
+    public function testjson()
+    {
+        $arr = array('asd' => 1, '2' => 2, '3' => 3,
+            'four' => array(
+                'one' => 'wan',
+                'two' => 'tu',
+                'three' => 'tri'
+            ),
+            'five' => $this->asd(),
+            'six' => true,
+            'seven' => null
+        );
+
+        $json = json_encode($arr);
+        $data['json'] = $json;
+
+        $this->load->view('template', $data);
+    }
+
+    public function asd()
+    {
+        return "asd";
+    }
+
+    public function try45()
+    {
+        try
+        {
+            return FALSE;
+        }
+        catch (Exception $e)
+        {
+            echo $e->getMessage();
+        }
+    }
 }
 
 /* End of file test.php */
