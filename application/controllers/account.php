@@ -87,8 +87,8 @@ class Account extends CI_Controller
         {
             if (!$this->input->post())
             {
-                $params['username'] = null;
-                $params['login_error'] = null;
+                $params['username'] = NULL;
+                $params['login_error'] = NULL;
             }
             else
             {
@@ -111,7 +111,7 @@ class Account extends CI_Controller
         $this->template->load($data);
     }
 
-    private function _check_user_login()
+    protected function _check_user_login()
     {
         if (!$this->form_validation->run('login'))
         {
@@ -239,7 +239,7 @@ class Account extends CI_Controller
         $params['recaptcha'] = $this->recaptcha->recaptcha_get_html();
 
         $data['content'] = $params;
-        $data['layout'] = 'default';
+        $data['layout'] = 'none';
         $data['page'] = 'account/register_view';
 
         $this->load->view('template', $data);
@@ -525,6 +525,112 @@ class Account extends CI_Controller
         $this->session->unset_userdata($user_data);
 
         redirect('home');
+    }
+
+        public function register_user()
+    {
+        if ($this->input->post())
+        {
+            try
+            {
+
+            }
+            catch (Exception $e)
+            {
+
+            }
+        }
+        else if ($this->session->flashdata())
+        {
+            $params['firstname'] = $this->session->flashdata('firstname');
+            $params['lastname'] = $this->session->flashdata('lastname');
+            $params['email'] = $this->session->flashdata('email');
+            $params['username'] = $this->session->flashdata('username');
+        }
+        else
+        {
+            // Set blank values
+            $params['firstname'] = '';
+            $params['lastname'] = '';
+            $params['email'] = '';
+            $params['username'] = '';
+        }
+
+        // Keep the flashdata incase the registration fails
+        $this->session->keep_flashdata('authenticator');
+        $this->session->keep_flashdata('authenticator_id');
+
+        $data = array(
+            'content' => $params,
+            'layout' => 'none',
+            'page' => 'account/register_view'
+        );
+
+        $this->template->load($data);
+    }
+
+    protected function _check_register_user()
+    {
+        if (!$this->form_validation->run('register'))
+        {
+            throw new Exception("Registration validation failed.");
+        }
+
+        if (!$this->recaptcha->recaptcha_check_answer()->is_valid)
+        {
+            throw new Exception("Captcha failed");
+        }
+
+        $register_data = array_slice($this->input->post(NULL, TRUE), 0, 5);
+
+        $authenticator = $this->session->flashdata('authenticator');
+        $authenticator_id = $this->session->flashdata('authenticator_id');
+
+        if ($authenticator && $authenticator_id)
+        {
+            $register_data[$authenticator] = $authenticator_id;
+        }
+
+        if (!$this->check_email_exist($register_data['email']))
+        {
+            throw new Exception("Email already exists");
+        }
+
+        $register_data['password'] = md5(sha1($this->encrypt->encode($register_data['password'])));
+        $register_data['token'] = md5(sha1($this->encrypt->encode($register_data['email'])));
+        $register_data['date_registered'] = date("Y-m-d H:i:s", time());
+    }
+
+    protected function check_email_exist($email = '')
+    {
+        try {
+            if ($this->input->post()) {
+                if ($this->form_validation->run('email')) {
+                    $email = $this->input->post('email');
+                } else {
+                    throw new Exception("Email validation failed.");
+                }
+            } else {
+                $rules = 'trim|required|valid_email|max_length[254]|xss_clean';
+                
+                if (!$this->form_validation->validate($email, 'Email Address', $rules)) {
+                    throw new Exception("Email validation failed.");
+                }
+            }
+
+            if ($this->account_model->check_email_exist($email)) {
+                throw new Exception("Email already exists.");
+            } else {
+                echo TRUE; // Valid Email
+            }
+        } catch (Exception $e) {
+            echo FALSE; // Email validation failed or already exist
+        }
+    }
+
+    private function encrypter($key)
+    {
+        return md5(sha1($this->encrypt->encode($key)));
     }
 }
 

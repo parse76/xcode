@@ -33,6 +33,8 @@ class Template
 			case 'profile':
 				$this->profile_template($data['content'], $data['page']);
 				break;
+			case 'custom':
+				$this->custom_template($data['content'], $data['page']);
 		}
 	}
 
@@ -59,5 +61,18 @@ class Template
 		$this->parser->parse('header', $content);
 		$this->parser->parse($page, $content);
 		$this->parser->parse('footer', $content);
+	}
+
+	public function custom_template($content, $pages)
+	{
+		if (!is_array($pages))
+		{
+			$this->none_template($content, $pages);
+		}
+
+		foreach ($pages as $page)
+		{
+			$this->parser->parse($page, $content);
+		}
 	}
 }
