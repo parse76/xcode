@@ -83,23 +83,14 @@ class Account extends CI_Controller
 
     public function user_login()
     {
-        try
+        if (!$this->input->post())
         {
-            if (!$this->input->post())
-            {
-                $params['username'] = NULL;
-                $params['login_error'] = NULL;
-            }
-            else
-            {
-                redirect($this->_check_user_login());    
-            }
+            $params['username'] = NULL;
+            $params['login_error'] = NULL;
         }
-        catch (Exception $e)
+        else
         {
-            // What ever the catch, return this as an error message
-            $params['username'] = $this->input->post('username');
-            $params['login_error'] = "Either Username or Password is incorrect";
+            $params = $this->_check_user_login();
         }
 
         $data = array(
@@ -113,119 +104,168 @@ class Account extends CI_Controller
 
     protected function _check_user_login()
     {
-        if (!$this->form_validation->run('login'))
+        try
         {
-            throw new Exception("Validation failed.");
+            if (!$this->form_validation->run('login'))
+            {
+                throw new Exception("Validation failed.");
+            }
+
+            $username = $this->input->post('username');
+            $password = $this->mycrypt($this->input->post('password'));
+            $database_validation = $this->account_model->user_login($username, $password);
+
+            if (!$database_validation)
+            {
+                throw new Exception("Record not found.");
+            }
+
+            $login_data = array(
+                'user_id' => $database_validation['id'],
+                'authenticator' => "default",
+                'logged_in' => TRUE
+            );
+
+            $this->session->set_userdata($login_data);
+
+            redirect($username);
+        }
+        catch (Exception $e)
+        {
+            $params['username'] = $this->input->post('username');
+            $params['login_error'] = "Either Username or Password is incorrect";
         }
 
-        $username = $this->input->post('username');
-        $password = $this->input->post('password');
-        $database_validation = $this->account_model->user_login($username, $password);
-
-        if (!$database_validation)
-        {
-            throw new Exception("Record not found.");
-        }
-
-        $login_data = array(
-            'user_id' => $database_validation->id,
-            'authenticator' => "default",
-            'logged_in' => TRUE
-        );
-
-        $this->session->set_userdata($login_data);
-
-        return $database_validation->username;
+        return $params;
     }
+
+    // public function register_user()
+    // {
+    //     // Check if referred by third part accounts
+    //     $authenticator = $this->session->flashdata('authenticator');
+    //     $authenticator_id = $this->session->flashdata('authenticator_id');
+
+    //     // if ($this->account_model->third_party_login($authenticator, $authenticator_id))
+    //     // {
+    //     //     echo 'REDIRECT TO PROFILE';
+    //     // }
+
+    //     if ($this->input->post())
+    //     {
+    //         $validator = $this->form_validation->run('register');
+    //         $response = $this->recaptcha->recaptcha_check_answer();
+            
+    //         if ($validator === TRUE && $response->is_valid)
+    //         {
+    //             $register_data = array_slice($this->input->post(NULL, TRUE),0, 5);
+                
+    //             if ($authenticator && $authenticator_id)
+    //             {
+    //                 $register_data[$authenticator] = $authenticator_id;
+    //             }
+
+    //             $register_data['password'] = md5($this->encrypt->encode($register_data['password']));
+    //             $register_data['token'] = sha1($this->encrypt->encode($register_data['username']));
+    //             $register_data['date_registered'] = date("Y-m-d H:i:s", time());
+
+    //             if ($this->account_model->register_user($register_data))
+    //             {
+    //                 // Send confirmation email
+    //                 $this->send_email_confirmation($register_data['email'], $register_data['token']);
+
+    //                 $data['content'] = $params;
+    //                 $data['layout'] = 'default';
+    //                 $data['page'] = 'account/register_view';
+
+    //                 $this->load->view('template', $data);
+    //             }
+    //             else
+    //             {
+    //                 throw new Exception("Cannot register at the moment", 1);
+    //             }
+                
+    //             // var_dump($register_data);
+    //             // var_dump($this->input->post(NULL, TRUE));
+    //         }
+    //         else
+    //         {
+    //             // Preserve authentication if registration fails
+    //             if ($authenticator)
+    //             {
+    //                 $this->session->keep_flashdata('authenticator');
+    //                 $this->session->keep_flashdata('authenticator_id');
+    //             }
+
+    //             // Get recaptcha error
+    //             $this->recaptcha->error = $response->error;
+
+    //             // Return submitted values
+    //             $params['firstname'] = set_value('firstname');
+    //             $params['lastname'] = set_value('lastname');
+    //             $params['email'] = set_value('email');
+    //             $params['username'] = set_value('username');
+    //         }
+    //     }
+    //     else
+    //     {
+    //         if ($authenticator)
+    //         {
+    //             $params['authenticator'] = $this->session->flashdata('authenticator');
+    //             $params['firstname'] = $this->session->flashdata('firstname');
+    //             $params['lastname'] = $this->session->flashdata('lastname');
+    //             $params['email'] = $this->session->flashdata('email');
+    //             $params['username'] = $this->session->flashdata('username');
+
+    //             $this->session->keep_flashdata('authenticator');
+    //             $this->session->keep_flashdata('authenticator_id');
+    //         }
+    //         else
+    //         {
+    //             // Set blank values
+    //             $params['firstname'] = '';
+    //             $params['lastname'] = '';
+    //             $params['email'] = '';
+    //             $params['username'] = '';
+    //         }
+    //     }
+
+    //     // Set error messages, returns blank if no error
+    //     $params['firstname_error'] = form_error('firstname');
+    //     $params['lastname_error'] = form_error('lastname');
+    //     $params['email_error'] = form_error('email');
+    //     $params['username_error'] = form_error('username');
+    //     $params['password_error'] = form_error('password');
+    //     $params['password2_error'] = form_error('password2');
+
+    //     $params['recaptcha'] = $this->recaptcha->recaptcha_get_html();
+
+    //     $data['content'] = $params;
+    //     $data['layout'] = 'none';
+    //     $data['page'] = 'account/register_view';
+
+    //     $this->load->view('template', $data);
+    // }
 
     public function register_user()
     {
-        // Check if referred by third part accounts
-        $authenticator = $this->session->flashdata('authenticator');
-        $authenticator_id = $this->session->flashdata('authenticator_id');
-
-        // if ($this->account_model->third_party_login($authenticator, $authenticator_id))
-        // {
-        //     echo 'REDIRECT TO PROFILE';
-        // }
-
         if ($this->input->post())
         {
-            $validator = $this->form_validation->run('register');
-            $response = $this->recaptcha->recaptcha_check_answer();
-            
-            if ($validator === TRUE && $response->is_valid)
-            {
-                $register_data = array_slice($this->input->post(NULL, TRUE),0, 5);
-                
-                if ($authenticator && $authenticator_id)
-                {
-                    $register_data[$authenticator] = $authenticator_id;
-                }
-
-                $register_data['password'] = md5($this->encrypt->encode($register_data['password']));
-                $register_data['token'] = sha1($this->encrypt->encode($register_data['username']));
-                $register_data['date_registered'] = date("Y-m-d H:i:s", time());
-
-                if ($this->account_model->register_user($register_data))
-                {
-                    // Send confirmation email
-                    $this->send_email_confirmation($register_data['email'], $register_data['token']);
-
-                    $data['content'] = $params;
-                    $data['layout'] = 'default';
-                    $data['page'] = 'account/register_view';
-
-                    $this->load->view('template', $data);
-                }
-                else
-                {
-                    throw new Exception("Cannot register at the moment", 1);
-                }
-                
-                // var_dump($register_data);
-                // var_dump($this->input->post(NULL, TRUE));
-            }
-            else
-            {
-                // Preserve authentication if registration fails
-                if ($authenticator)
-                {
-                    $this->session->keep_flashdata('authenticator');
-                    $this->session->keep_flashdata('authenticator_id');
-                }
-
-                // Get recaptcha error
-                $this->recaptcha->error = $response->error;
-
-                // Return submitted values
-                $params['firstname'] = set_value('firstname');
-                $params['lastname'] = set_value('lastname');
-                $params['email'] = set_value('email');
-                $params['username'] = set_value('username');
-            }
+            $params = $this->_check_register_user();
+        }
+        else if ($this->session->flashdata())
+        {
+            $params['firstname'] = $this->session->flashdata('firstname');
+            $params['lastname'] = $this->session->flashdata('lastname');
+            $params['email'] = $this->session->flashdata('email');
+            $params['username'] = $this->session->flashdata('username');
         }
         else
         {
-            if ($authenticator)
-            {
-                $params['authenticator'] = $this->session->flashdata('authenticator');
-                $params['firstname'] = $this->session->flashdata('firstname');
-                $params['lastname'] = $this->session->flashdata('lastname');
-                $params['email'] = $this->session->flashdata('email');
-                $params['username'] = $this->session->flashdata('username');
-
-                $this->session->keep_flashdata('authenticator');
-                $this->session->keep_flashdata('authenticator_id');
-            }
-            else
-            {
-                // Set blank values
-                $params['firstname'] = '';
-                $params['lastname'] = '';
-                $params['email'] = '';
-                $params['username'] = '';
-            }
+            // Set blank values
+            $params['firstname'] = NULL;
+            $params['lastname'] = NULL;
+            $params['email'] = NULL;
+            $params['username'] = NULL;
         }
 
         // Set error messages, returns blank if no error
@@ -235,14 +275,123 @@ class Account extends CI_Controller
         $params['username_error'] = form_error('username');
         $params['password_error'] = form_error('password');
         $params['password2_error'] = form_error('password2');
-
         $params['recaptcha'] = $this->recaptcha->recaptcha_get_html();
 
-        $data['content'] = $params;
-        $data['layout'] = 'none';
-        $data['page'] = 'account/register_view';
+        $data = array(
+            'content' => $params,
+            'layout' => 'none',
+            'page' => 'account/register_view'
+        );
 
-        $this->load->view('template', $data);
+        $this->template->load($data);
+    }
+
+    protected function _check_register_user()
+    {
+        try
+        {
+            if (!$this->form_validation->run('register'))
+            {
+                throw new Exception("Registration validation failed.");
+            }
+
+            if (!$this->recaptcha->recaptcha_check_answer()->is_valid)
+            {
+                throw new Exception("Captcha failed.");
+            }
+
+            $register_data = array_slice($this->input->post(NULL, TRUE), 0, 5);
+
+            $authenticator = $this->session->flashdata('authenticator');
+            $authenticator_id = $this->session->flashdata('authenticator_id');
+
+            if ($authenticator && $authenticator_id)
+            {
+                $register_data[$authenticator] = $authenticator_id;
+            }
+
+            if (!$this->check_email_exist($register_data['email']))
+            {
+                throw new Exception("Email already exists");
+            }
+
+            $register_data['password'] = $this->mycrypt($register_data['password']);
+            $register_data['token'] = $this->mycrypt($register_data['username']);
+            $register_data['date_registered'] = date("Y-m-d H:i:s", time());
+
+            if ($this->account_model->register_user($register_data))
+            {
+                $this->send_email_confirmation($register_data['email'], $register_data['token']);
+            }
+            else
+            {
+                throw new Exception("Ohh snap! something went wrong. :(");
+            }
+
+            redirect('http://www.google.com/');
+        }
+        catch (Exception $e)
+        {
+            // Repopulate the form with submitted values
+            $params['firstname'] = set_value('firstname');
+            $params['lastname'] = set_value('lastname');
+            $params['email'] = set_value('email');
+            $params['username'] = set_value('username');
+
+            // Keep the flashdata incase the registration fails
+            $this->session->keep_flashdata('authenticator');
+            $this->session->keep_flashdata('authenticator_id');
+
+            // Get recaptcha error
+            $this->recaptcha->error = $response->error;
+        }
+
+        return $params;
+    }
+
+    protected function check_email_exist($email = '')
+    {
+        try
+        {
+            if ($this->input->post())
+            {
+                if ($this->form_validation->run('email'))
+                {
+                    $email = $this->input->post('email');
+                }
+                else
+                {
+                    throw new Exception("Email validation failed.");
+                }
+            }
+            else
+            {
+                if ($email == '')
+                {
+                    throw new Exception("No email passed");
+                }
+
+                $rules = 'trim|required|valid_email|max_length[254]|xss_clean';
+                
+                if (!$this->form_validation->validate($email, 'Email Address', $rules))
+                {
+                    throw new Exception("Email validation failed.");
+                }
+            }
+
+            if ($this->account_model->check_email_exist($email))
+            {
+                throw new Exception("Email already exists.");
+            }
+            else
+            {
+                return TRUE; // Valid and available email
+            }
+        }
+        catch (Exception $e)
+        {
+            return FALSE; // Email validation failed or already exist
+        }
     }
 
     public function facebook_login()
@@ -527,108 +676,7 @@ class Account extends CI_Controller
         redirect('home');
     }
 
-        public function register_user()
-    {
-        if ($this->input->post())
-        {
-            try
-            {
-
-            }
-            catch (Exception $e)
-            {
-
-            }
-        }
-        else if ($this->session->flashdata())
-        {
-            $params['firstname'] = $this->session->flashdata('firstname');
-            $params['lastname'] = $this->session->flashdata('lastname');
-            $params['email'] = $this->session->flashdata('email');
-            $params['username'] = $this->session->flashdata('username');
-        }
-        else
-        {
-            // Set blank values
-            $params['firstname'] = '';
-            $params['lastname'] = '';
-            $params['email'] = '';
-            $params['username'] = '';
-        }
-
-        // Keep the flashdata incase the registration fails
-        $this->session->keep_flashdata('authenticator');
-        $this->session->keep_flashdata('authenticator_id');
-
-        $data = array(
-            'content' => $params,
-            'layout' => 'none',
-            'page' => 'account/register_view'
-        );
-
-        $this->template->load($data);
-    }
-
-    protected function _check_register_user()
-    {
-        if (!$this->form_validation->run('register'))
-        {
-            throw new Exception("Registration validation failed.");
-        }
-
-        if (!$this->recaptcha->recaptcha_check_answer()->is_valid)
-        {
-            throw new Exception("Captcha failed");
-        }
-
-        $register_data = array_slice($this->input->post(NULL, TRUE), 0, 5);
-
-        $authenticator = $this->session->flashdata('authenticator');
-        $authenticator_id = $this->session->flashdata('authenticator_id');
-
-        if ($authenticator && $authenticator_id)
-        {
-            $register_data[$authenticator] = $authenticator_id;
-        }
-
-        if (!$this->check_email_exist($register_data['email']))
-        {
-            throw new Exception("Email already exists");
-        }
-
-        $register_data['password'] = md5(sha1($this->encrypt->encode($register_data['password'])));
-        $register_data['token'] = md5(sha1($this->encrypt->encode($register_data['email'])));
-        $register_data['date_registered'] = date("Y-m-d H:i:s", time());
-    }
-
-    protected function check_email_exist($email = '')
-    {
-        try {
-            if ($this->input->post()) {
-                if ($this->form_validation->run('email')) {
-                    $email = $this->input->post('email');
-                } else {
-                    throw new Exception("Email validation failed.");
-                }
-            } else {
-                $rules = 'trim|required|valid_email|max_length[254]|xss_clean';
-                
-                if (!$this->form_validation->validate($email, 'Email Address', $rules)) {
-                    throw new Exception("Email validation failed.");
-                }
-            }
-
-            if ($this->account_model->check_email_exist($email)) {
-                throw new Exception("Email already exists.");
-            } else {
-                echo TRUE; // Valid Email
-            }
-        } catch (Exception $e) {
-            echo FALSE; // Email validation failed or already exist
-        }
-    }
-
-    private function encrypter($key)
+    private function mycrypt($key)
     {
         return md5(sha1($this->encrypt->encode($key)));
     }

@@ -43,7 +43,6 @@ class Account_model extends CI_Model
 
 	public function user_login($username, $password)
 	{
-		
 		$this->db->select('id');
 		$this->db->from('users');
 		$this->db->where('username', $username);
