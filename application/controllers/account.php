@@ -83,14 +83,14 @@ class Account extends CI_Controller
 
     public function user_login()
     {
-        if (!$this->input->post())
+        if ($this->input->post())
         {
-            $params['username'] = NULL;
-            $params['login_error'] = NULL;
+            $params = $this->_check_user_login();
         }
         else
         {
-            $params = $this->_check_user_login();
+            $params['username'] = NULL;
+            $params['login_error'] = NULL;
         }
 
         $data = array(
@@ -349,7 +349,9 @@ class Account extends CI_Controller
         return $params;
     }
 
-    protected function check_email_exist($email = '')
+    
+
+    private function check_email_exist($email = '')
     {
         try
         {
@@ -381,16 +383,16 @@ class Account extends CI_Controller
 
             if ($this->account_model->check_email_exist($email))
             {
-                throw new Exception("Email already exists.");
+                return TRUE;
             }
             else
             {
-                return TRUE; // Valid and available email
+                return FALSE; // Valid and available email
             }
         }
         catch (Exception $e)
         {
-            return FALSE; // Email validation failed or already exist
+            return $e->getMessage; // Email validation failed or already exist
         }
     }
 
