@@ -252,7 +252,7 @@ class Account extends CI_Controller
         {
             $params = $this->_check_register_user();
         }
-        else if ($this->session->flashdata())
+        else if ($this->session->flashdata('authenticator'))
         {
             $params['firstname'] = $this->session->flashdata('firstname');
             $params['lastname'] = $this->session->flashdata('lastname');
@@ -343,19 +343,39 @@ class Account extends CI_Controller
             $this->session->keep_flashdata('authenticator_id');
 
             // Get recaptcha error
-            $this->recaptcha->error = $response->error;
+            $this->recaptcha->error = $this->recaptcha->recaptcha_check_answer()->error;
         }
 
         return $params;
     }
 
-    
+    public function available_email($email = '')
+    {
+        $email = "bryan.estrito@gmail.com";
 
-    private function check_email_exist($email = '')
+        if ($email == '')
+        {
+            return FALSE;
+        }
+
+        var_dump($this->check_email($email));
+    }
+
+    public function existing_email($email = '')
+    {
+        if ($email == '')
+        {
+            return FALSE;
+        }
+
+        var_dump($this->check_email($email));   
+    }
+
+    private function check_email($email = '')
     {
         try
         {
-            if ($this->input->post())
+            if ($this->input->post('email'))
             {
                 if ($this->form_validation->run('email'))
                 {
@@ -381,7 +401,7 @@ class Account extends CI_Controller
                 }
             }
 
-            if ($this->account_model->check_email_exist($email))
+            if ($this->account_model->check_email($email))
             {
                 return TRUE;
             }
@@ -392,7 +412,7 @@ class Account extends CI_Controller
         }
         catch (Exception $e)
         {
-            return $e->getMessage; // Email validation failed or already exist
+            return $e->getMessage(); // Email validation failed or already exist
         }
     }
 

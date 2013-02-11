@@ -156,6 +156,22 @@ class Account_model extends CI_Model
 			return FALSE;
 		}
 	}
+
+	public function check_email($email)
+	{
+		if (!$email)
+		{
+			return FALSE;
+		}
+
+		$this->db->select('email');
+		$this->db->from('users');
+		$this->db->where('email', $email);
+
+		$query = $this->db->get();
+
+		$query->num_rows();
+	}
 }
 
 /* End of file account_model.php */

@@ -56,6 +56,8 @@ $route['twitter'] = 'account/twitter_login';
 $route['google'] = 'account/google_plus_login';
 $route['verify/(:any)'] = 'account/verify_token/$1';
 $route['resend'] = 'account/resend_email_confirmation';
+$route['available/(:any)'] =  'account/available_email/$1';
+$route['existing/(:any)'] =  'account/existing_email/$1';
 
 // Test Routes
 $route['test/(:any)'] = 'test/$1';
