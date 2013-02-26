@@ -123,7 +123,7 @@ if (defined('ENVIRONMENT'))
 	// $assign_to_config['name_of_config_item'] = 'value of config item';
 
 // Setup the timezone if php.ini doesn't have or setup in a wrong timezone
-date_default_timezone_set('Asia/Manila');
+// date_default_timezone_set('UTC');
 
 // --------------------------------------------------------------------
 // END OF USER CONFIGURABLE SETTINGS.  DO NOT EDIT BELOW THIS LINE

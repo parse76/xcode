@@ -80,25 +80,26 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">Birth Date:</label>
+                    <label class="control-label" for="birthdate">Birth Date:</label>
                     <div class="controls">
                         <select name="month" id="month" style="width:110px;">
-                            <option value="0">Month</option>
-                            <option value="1">January</option>
-                            <option value="2">February</option>
-                            <option value="3">March</option>
-                            <option value="4">April</option>
-                            <option value="5">May</option>
-                            <option value="6">June</option>
-                            <option value="7">July</option>
-                            <option value="8">August</option>
-                            <option value="9">September</option>
+                            <option value="00">Month</option>
+                            <option value="01">January</option>
+                            <option value="02">February</option>
+                            <option value="03">March</option>
+                            <option value="04">April</option>
+                            <option value="05">May</option>
+                            <option value="06">June</option>
+                            <option value="07">July</option>
+                            <option value="08">August</option>
+                            <option value="09">September</option>
                             <option value="10">October</option>
                             <option value="11">November</option>
                             <option value="12">December</option>
                         </select>
                         <input type="text" name="day" id="day" placeholder="Date" style="width:35px;">
                         <input type="text" name="year" id="year" placeholder="Year" style="width:35px;">
+                        <label>{birthdate_error}</label>
                     </div>
                 </div>
                 <div class="control-group">

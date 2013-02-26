@@ -104,19 +104,16 @@ class MY_Form_validation extends CI_Form_validation
      * @param   string  date
      * @return  boolean
      */
-    public function valid_date($date='')
+    public function valid_date($date = '')
     {
         list($year, $month, $day) = explode("-", $date); 
         
         if (is_numeric($year) && is_numeric($month) && is_numeric($day)) 
         {
-            if (checkdate($month, $day, $year))
-            {
-                return TRUE;
-            }
+            return (checkdate($month, $day, $year));
         }
 
-        $this->set_message('valid_date', 'The %s field is not a valid date.');
+        // $this->set_message('valid_date', 'The %s field is not a valid date.');
         
         return FALSE;
     }
@@ -132,12 +129,17 @@ class MY_Form_validation extends CI_Form_validation
      */
     public function valid_datetime($datetime='')
     {
-        if (date('Y-m-d H:i:s', strtotime($datetime)) == $datetime)
+        return (date('Y-m-d H:i:s', strtotime($datetime)) == $datetime);
+    }
+
+    public function valid_birthdate($year, $month, $day)
+    {
+        if (strtotime(date("Y-m-d", time())) >= strtotime("{$year}-{$month}-{$day}"))
         {
             return TRUE;
         }
 
-        $this->set_message('valid_datetime', 'The %s field is not a valid datetime.');
+        $this->set_message('birthdate', "The birthdate field is not a valid date");
 
         return FALSE;
     }

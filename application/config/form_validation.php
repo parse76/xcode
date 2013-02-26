@@ -49,7 +49,56 @@ $config = array(
         array(
             'field' => 'email',
             'label' => 'Email Address',
-            'rules' => 'trim|required|valid_email|max_length[254]|xss_clean'
+            'rules' => 'trim|required|valid_email|is_unique[users.username]|max_length[254]|xss_clean'
+        )
+    ),
+    'date' => array(
+        array(
+            'field' => 'year',
+            'label' => 'Year',
+            'rules' => 'trim|required|alpha_numeric|xss_clean'
+        ),
+        array(
+            'field' => 'month',
+            'label' => 'Month',
+            'rules' => 'trim|required|alpha_numeric|xss_clean'
+        ),
+        array(
+            'field' => 'day',
+            'label' => 'Day',
+            'rules' => 'trim|required|alpha_numeric|xss_clean'
+        )
+    ),
+    'datetime' => array(
+        array(
+            'field' => 'year',
+            'label' => 'Year',
+            'rules' => 'trim|required|alpha_numeric|xss_clean'
+        ),
+        array(
+            'field' => 'month',
+            'label' => 'Month',
+            'rules' => 'trim|required|alpha_numeric|xss_clean'
+        ),
+        array(
+            'field' => 'day',
+            'label' => 'Day',
+            'rules' => 'trim|required|alpha_numeric|xss_clean'
+        ),
+        array(
+            'field' => 'hour',
+            'label' => 'Hour',
+            'rules' => 'trim|required|alpha_numeric|xss_clean'
+        ),
+        array(
+            'field' => 'minute',
+            'label' => 'Minute',
+            'rules' => 'trim|required|alpha_numeric|xss_clean'
+        ),
+        array(
+            'field' => 'second',
+            'label' => 'Second',
+            'rules' => 'trim|required|alpha_numeric|xss_clean'
         )
     )
 );

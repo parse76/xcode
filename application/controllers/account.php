@@ -275,7 +275,12 @@ class Account extends CI_Controller
         $params['username_error'] = form_error('username');
         $params['password_error'] = form_error('password');
         $params['password2_error'] = form_error('password2');
+        $params['birthdate_error'] = form_error('birthdate');
         $params['recaptcha'] = $this->recaptcha->recaptcha_get_html();
+
+        var_dump($params['error']);
+
+        var_dump(form_error('birthdate'));
 
         $data = array(
             'content' => $params,
@@ -310,9 +315,25 @@ class Account extends CI_Controller
                 $register_data[$authenticator] = $authenticator_id;
             }
 
-            if (!$this->check_email_exist($register_data['email']))
+            // if (!$this->check_email_exist($register_data['email']))
+            // {
+            //     throw new Exception("Email already exists");
+            // }
+
+            if (!$this->form_validation->run('date')) 
             {
-                throw new Exception("Email already exists");
+                throw new Exception("Invalid date.");
+            }
+            else
+            {
+                $year = $this->input->post('year');
+                $month = $this->input->post('month');
+                $day = $this->input->post('day');
+
+                if (!$this->form_validation->valid_birthdate($year, $month, $day))
+                {
+                    throw new Exception("Invalid birthdate.");    
+                }
             }
 
             $register_data['password'] = $this->mycrypt($register_data['password']);
@@ -327,20 +348,22 @@ class Account extends CI_Controller
             {
                 throw new Exception("Ohh snap! something went wrong. :(");
             }
-
-            redirect('http://www.google.com/');
         }
         catch (Exception $e)
         {
+            // Keep the flashdata for failed registrations
+            $this->session->keep_flashdata('authenticator');
+            $this->session->keep_flashdata('authenticator_id');
+
             // Repopulate the form with submitted values
             $params['firstname'] = set_value('firstname');
             $params['lastname'] = set_value('lastname');
             $params['email'] = set_value('email');
             $params['username'] = set_value('username');
-
-            // Keep the flashdata incase the registration fails
-            $this->session->keep_flashdata('authenticator');
-            $this->session->keep_flashdata('authenticator_id');
+            $params['month'] = set_value('month');
+            $params['day'] = set_value('day');
+            $params['year'] = set_value('year');
+            $params['error'] = $e->getMessage();
 
             // Get recaptcha error
             $this->recaptcha->error = $this->recaptcha->recaptcha_check_answer()->error;
