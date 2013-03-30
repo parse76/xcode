@@ -83,7 +83,7 @@
                     <label class="control-label" for="birthdate">Birth Date:</label>
                     <div class="controls">
                         <select name="month" id="month" style="width:110px;">
-                            <option value="00">Month</option>
+                            <option value="">Month</option>
                             <option value="01">January</option>
                             <option value="02">February</option>
                             <option value="03">March</option>
@@ -99,6 +99,7 @@
                         </select>
                         <input type="text" name="day" id="day" placeholder="Date" style="width:35px;">
                         <input type="text" name="year" id="year" placeholder="Year" style="width:35px;">
+                        <input type="hidden" name="birthdate">
                         <label>{birthdate_error}</label>
                     </div>
                 </div>

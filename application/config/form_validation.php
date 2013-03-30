@@ -17,12 +17,12 @@ $config = array(
         array(
             'field' => 'firstname',
             'label' => 'First Name',
-            'rules' => 'trim|required|max_length[35]|xss_clean'
+            'rules' => 'trim|required|alpha|max_length[35]|xss_clean'
         ),
         array(
             'field' => 'lastname',
             'label' => 'Last Name',
-            'rules' => 'trim|required|max_length[35]|xss_clean'
+            'rules' => 'trim|required|alpha|max_length[35]|xss_clean'
         ),
         array(
             'field' => 'email',
@@ -43,6 +43,26 @@ $config = array(
             'field' => 'password2',
             'label' => 'Password Confirmation',
             'rules' => 'trim|required|matches[password]|xss_clean'
+        ),
+        array(
+            'field' => 'year',
+            'label' => 'Year',
+            'rules' => 'trim|required|numeric|xss_clean'
+        ),
+        array(
+            'field' => 'month',
+            'label' => 'Month',
+            'rules' => 'trim|required|numeric|xss_clean'
+        ),
+        array(
+            'field' => 'day',
+            'label' => 'Day',
+            'rules' => 'trim|required|numeric|xss_clean'
+        ),
+        array(
+            'field' => 'gender',
+            'label' => 'Gender',
+            'rules' => 'trim|required|alpha|max_length[6]|min_length[4]|xss_clean'
         )
     ),
     'email' => array(
@@ -56,49 +76,56 @@ $config = array(
         array(
             'field' => 'year',
             'label' => 'Year',
-            'rules' => 'trim|required|alpha_numeric|xss_clean'
+            'rules' => 'trim|required|numeric|xss_clean'
         ),
         array(
             'field' => 'month',
             'label' => 'Month',
-            'rules' => 'trim|required|alpha_numeric|xss_clean'
+            'rules' => 'trim|required|numeric|xss_clean'
         ),
         array(
             'field' => 'day',
             'label' => 'Day',
-            'rules' => 'trim|required|alpha_numeric|xss_clean'
+            'rules' => 'trim|required|numeric|xss_clean'
         )
     ),
     'datetime' => array(
         array(
             'field' => 'year',
             'label' => 'Year',
-            'rules' => 'trim|required|alpha_numeric|xss_clean'
+            'rules' => 'trim|required|numeric|xss_clean'
         ),
         array(
             'field' => 'month',
             'label' => 'Month',
-            'rules' => 'trim|required|alpha_numeric|xss_clean'
+            'rules' => 'trim|required|numeric|xss_clean'
         ),
         array(
             'field' => 'day',
             'label' => 'Day',
-            'rules' => 'trim|required|alpha_numeric|xss_clean'
+            'rules' => 'trim|required|numeric|xss_clean'
         ),
         array(
             'field' => 'hour',
             'label' => 'Hour',
-            'rules' => 'trim|required|alpha_numeric|xss_clean'
+            'rules' => 'trim|required|numeric|xss_clean'
         ),
         array(
             'field' => 'minute',
             'label' => 'Minute',
-            'rules' => 'trim|required|alpha_numeric|xss_clean'
+            'rules' => 'trim|required|numeric|xss_clean'
         ),
         array(
             'field' => 'second',
             'label' => 'Second',
-            'rules' => 'trim|required|alpha_numeric|xss_clean'
+            'rules' => 'trim|required|numeric|xss_clean'
+        )
+    ),
+    'birthdate' => array(
+        array(
+            'field' => 'month',
+            'label' => 'Birthdate',
+            'rules' => 'valid_birthdate'
         )
     )
 );

@@ -132,17 +132,19 @@ class MY_Form_validation extends CI_Form_validation
         return (date('Y-m-d H:i:s', strtotime($datetime)) == $datetime);
     }
 
-    public function valid_birthdate($year, $month, $day)
-    {
-        if (strtotime(date("Y-m-d", time())) >= strtotime("{$year}-{$month}-{$day}"))
-        {
-            return TRUE;
-        }
+    // public function valid_birthdate()
+    // {
+    //     $birthdate = mktime(0, 0, 0, $month, $day, $year);
 
-        $this->set_message('birthdate', "The birthdate field is not a valid date");
+    //     if (strtotime(date("Y-m-d", time())) >= $birthdate)
+    //     {
+    //         return TRUE;
+    //     }
 
-        return FALSE;
-    }
+    //     $this->set_message('valid_birthdate', 'The %s is not a valid birthdate.');
+
+    //     return FALSE;
+    // }
 
 //     public function valid_date()
 // 	{

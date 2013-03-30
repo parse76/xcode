@@ -102,7 +102,7 @@ class Account extends CI_Controller
         $this->template->load($data);
     }
 
-    protected function _check_user_login()
+    private function _check_user_login()
     {
         try
         {
@@ -275,11 +275,18 @@ class Account extends CI_Controller
         $params['username_error'] = form_error('username');
         $params['password_error'] = form_error('password');
         $params['password2_error'] = form_error('password2');
-        $params['birthdate_error'] = form_error('birthdate');
+        $params['birthdate_error'] = form_error('month');
         $params['recaptcha'] = $this->recaptcha->recaptcha_get_html();
 
-        var_dump($params['error']);
+        var_dump(form_error('year'));
+        var_dump(form_error('month'));
+        var_dump(form_error('day'));
+        var_dump(form_error('gender'));
+        var_dump(form_error('birthdate'));
 
+        var_dump($this->_check_register_user());
+
+        var_dump($this->valid_birthdate());
         var_dump(form_error('birthdate'));
 
         $data = array(
@@ -291,19 +298,64 @@ class Account extends CI_Controller
         $this->template->load($data);
     }
 
+    public function valid_birthdate()
+    {
+        $this->form_validation->set_message('valid_birthdate', 'The Birthdate field is not a valid birthdate.');
+
+        $month = $this->input->post('month');
+        $day = $this->input->post('day');
+        $year = $this->input->post('year');
+
+        // $birthdate = mktime(0, 0, 0, $month, $day, $year);
+        $birthdate = strtotime($year.$month.$day);
+
+        if (!$birthdate) {
+            return FALSE;
+        }
+
+        if (time() >= $birthdate)
+        {
+            return TRUE;
+        }
+
+        return FALSE;
+    }
+
     protected function _check_register_user()
     {
         try
         {
+            // if ($this->form_validation->run('date'))
+            // {
+            //     $year = $this->input->post('year');
+            //     $month = $this->input->post('month');
+            //     $day = $this->input->post('day');
+
+            //     $this->form_validation->set_rules('month', 'callback_valid_birthdate');
+
+            //     if (!$this->form_validation->run())
+            //     {
+            //         throw new Exception("Invalid birthdate.");
+            //     }
+            // }
+            // else
+            // {
+            //     throw new Exception("Invalid date.");
+            // }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+
+            $this->form_validation->set_rules('birthdate', 'Birthdate', 'callback_valid_birthdate');
+
+            $this->form_validation->run();
+
             if (!$this->form_validation->run('register'))
             {
                 throw new Exception("Registration validation failed.");
             }
 
-            if (!$this->recaptcha->recaptcha_check_answer()->is_valid)
-            {
-                throw new Exception("Captcha failed.");
-            }
+            // if (!$this->recaptcha->recaptcha_check_answer()->is_valid)
+            // {
+            //     throw new Exception("Captcha failed.");
+            // }
 
             $register_data = array_slice($this->input->post(NULL, TRUE), 0, 5);
 
@@ -320,34 +372,20 @@ class Account extends CI_Controller
             //     throw new Exception("Email already exists");
             // }
 
-            if (!$this->form_validation->run('date')) 
-            {
-                throw new Exception("Invalid date.");
-            }
-            else
-            {
-                $year = $this->input->post('year');
-                $month = $this->input->post('month');
-                $day = $this->input->post('day');
-
-                if (!$this->form_validation->valid_birthdate($year, $month, $day))
-                {
-                    throw new Exception("Invalid birthdate.");    
-                }
-            }
+            // $this->form_validation->valid_birthdate();
 
             $register_data['password'] = $this->mycrypt($register_data['password']);
             $register_data['token'] = $this->mycrypt($register_data['username']);
             $register_data['date_registered'] = date("Y-m-d H:i:s", time());
 
-            if ($this->account_model->register_user($register_data))
-            {
-                $this->send_email_confirmation($register_data['email'], $register_data['token']);
-            }
-            else
-            {
-                throw new Exception("Ohh snap! something went wrong. :(");
-            }
+            // if ($this->account_model->register_user($register_data))
+            // {
+            //     $this->send_email_confirmation($register_data['email'], $register_data['token']);
+            // }
+            // else
+            // {
+            //     throw new Exception("Ohh snap! something went wrong. :(");
+            // }
         }
         catch (Exception $e)
         {
@@ -721,7 +759,7 @@ class Account extends CI_Controller
         redirect('home');
     }
 
-    private function mycrypt($key)
+    protected function mycrypt($key)
     {
         return md5(sha1($this->encrypt->encode($key)));
     }
